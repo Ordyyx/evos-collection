@@ -7,21 +7,23 @@
  *   artist  - Artist name
  *   album   - Album title
  *   year    - Release year
- *   cover   - Cover art URL (use Spotify for best quality)
+ *   cover   - Cover art URL (use Spotify/Apple Music for best quality)
  *   vinyl   - (optional) Vinyl appearance:
- *       color   - Hex color code (e.g., "#e74c3c" for red)
- *       color2  - Second color for marble/splatter styles
- *       style   - One of: "classic", "translucent", "marble", "splatter", "picture"
+ *       color      - Hex color code (e.g., "#e74c3c" for red)
+ *       color2     - Second color for marble/splatter styles
+ *       style      - One of: "classic", "translucent", "marble", "splatter", "picture"
+ *       labelColor - Hex color for the center label (default: "#1a1a1a")
+ *       labelText  - Custom text for label, or "auto" to use album name (default: "auto")
  * 
  * VINYL STYLES:
- *   classic     - Standard black vinyl (default)
+ *   classic     - Standard vinyl (default)
  *   translucent - See-through colored vinyl
  *   marble      - Swirled two-color effect
  *   splatter    - Random splatter pattern
  *   picture     - Picture disc (uses album cover)
  * 
  * To find high-quality cover art:
- * 1. Search the album on open.spotify.com
+ * 1. Search the album on open.spotify.com or music.apple.com
  * 2. Right-click the cover → "Copy image address"
  */
 
@@ -73,6 +75,8 @@
     const color = vinyl.color || '#1a1a1a';
     const color2 = vinyl.color2 || '#0a0a0a';
     const style = vinyl.style || 'classic';
+    const labelColor = vinyl.labelColor || '#1a1a1a';
+    const labelText = vinyl.labelText || 'auto'; // 'auto' uses album name
     
     let extraLayers = '';
     let extraClasses = `vinyl-${style}`;
@@ -86,17 +90,37 @@
       extraLayers = `<div class="picture-layer" style="background-image: url('${record.cover}')"></div>`;
     }
     
-    // Add glow for colored vinyl
-    const showGlow = style !== 'classic' && color !== '#1a1a1a' && color !== '#000000';
-    const glowLayer = showGlow ? `<div class="vinyl-glow"></div>` : '';
+    // Add glow for any colored vinyl (not just non-classic)
+    const isColored = color !== '#1a1a1a' && color !== '#000000' && color !== '#0a0a0a';
+    const glowLayer = isColored ? `<div class="vinyl-glow" style="--vinyl-color: ${color};"></div>` : '';
+    
+    // Determine label text color based on label background brightness
+    const labelTextColor = isLightColor(labelColor) ? '#1a1a1a' : '#ffffff';
+    
+    // Label text - use custom text or album name
+    const displayLabelText = labelText === 'auto' ? record.album : labelText;
     
     return `
       <div class="vinyl-disc ${extraClasses}" 
            style="--vinyl-color: ${color}; --vinyl-color2: ${color2};">
         ${extraLayers}
+        <div class="vinyl-label" style="--label-color: ${labelColor}; --label-text: ${labelTextColor};">
+          <span class="vinyl-label-text">${displayLabelText}</span>
+        </div>
+        <div class="vinyl-reflection"></div>
       </div>
       ${glowLayer}
     `;
+  }
+  
+  // Helper to determine if a color is light or dark
+  function isLightColor(hex) {
+    const c = hex.replace('#', '');
+    const r = parseInt(c.substr(0, 2), 16);
+    const g = parseInt(c.substr(2, 2), 16);
+    const b = parseInt(c.substr(4, 2), 16);
+    const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+    return brightness > 128;
   }
 
   // Render albums

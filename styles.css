@@ -4,7 +4,7 @@
    record shops and living room shelves
    ============================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@400;500;600;700&display=swap');
 
 :root {
   /* Warm dark palette */
@@ -66,7 +66,7 @@ html {
 }
 
 body {
-  font-family: 'DM Sans', system-ui, sans-serif;
+  font-family: 'Space Grotesk', system-ui, sans-serif;
   background: var(--bg);
   color: var(--text);
   min-height: 100vh;
@@ -109,12 +109,13 @@ body::before {
 }
 
 .logo {
-  font-family: 'Instrument Serif', Georgia, serif;
-  font-size: 28px;
-  font-style: italic;
+  font-family: 'Syne', system-ui, sans-serif;
+  font-size: 26px;
+  font-weight: 700;
   color: var(--accent);
   letter-spacing: -0.02em;
   user-select: none;
+  text-transform: uppercase;
 }
 
 .record-count {
@@ -150,7 +151,7 @@ body::before {
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(var(--album-size), 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(calc(var(--album-size) * 1.45), 1fr));
   gap: var(--gap);
 }
 
@@ -160,10 +161,14 @@ body::before {
 
 .album {
   position: relative;
-  aspect-ratio: 1;
+  aspect-ratio: 1.45 / 1; /* Extra space on right for vinyl */
   cursor: pointer;
   transform-style: preserve-3d;
   perspective: 1000px;
+}
+
+.album:hover {
+  z-index: 10;
 }
 
 .album-inner {
@@ -179,8 +184,10 @@ body::before {
 
 /* Cover artwork */
 .album-cover {
-  position: relative;
-  width: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 69%; /* Square cover takes left portion */
   height: 100%;
   border-radius: var(--radius);
   overflow: hidden;
@@ -188,6 +195,7 @@ body::before {
     0 4px 12px rgba(0,0,0,0.4),
     0 20px 40px rgba(0,0,0,0.3);
   transition: box-shadow 0.5s var(--ease-out);
+  z-index: 2;
 }
 
 .album:hover .album-cover {
@@ -208,41 +216,79 @@ body::before {
   transform: scale(1.05);
 }
 
-/* Vinyl disc peeking out */
+/* Vinyl disc - always visible beside cover */
 .vinyl-disc {
   position: absolute;
   top: 50%;
-  left: 50%;
-  width: 92%;
-  height: 92%;
+  left: 34.5%; /* Starts peeking from behind cover */
+  width: 64%;
+  height: 93%;
   border-radius: 50%;
-  transform: translate(-50%, -50%) translateX(0%);
-  opacity: 0;
+  transform: translateY(-50%) translateX(0%);
+  opacity: 1;
   transition: 
     transform 0.6s var(--ease-out),
     opacity 0.4s var(--ease-out);
-  z-index: -1;
+  z-index: 1;
   box-shadow: 
     inset 0 0 30px rgba(0,0,0,0.5),
     0 4px 20px rgba(0,0,0,0.4);
   overflow: hidden;
 }
 
-/* Center label */
-.vinyl-disc::before {
+/* Center label - now a real element for text */
+.vinyl-label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 32%;
+  height: 32%;
+  border-radius: 50%;
+  background: var(--label-color, #1a1a1a);
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  box-shadow: 
+    0 2px 8px rgba(0,0,0,0.4),
+    inset 0 0 20px rgba(0,0,0,0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8%;
+  text-align: center;
+  overflow: hidden;
+}
+
+/* Spindle hole */
+.vinyl-label::before {
   content: '';
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 28%;
-  height: 28%;
+  width: 8%;
+  height: 8%;
   border-radius: 50%;
-  background: 
-    radial-gradient(circle at center, #1a1a1a 8%, transparent 8.5%),
-    radial-gradient(circle at center, var(--accent) 9%, var(--surface-elevated) 9%);
+  background: #0a0a0a;
   transform: translate(-50%, -50%);
-  z-index: 10;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.8);
+  z-index: 11;
+}
+
+.vinyl-label-text {
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+  font-size: clamp(6px, 1.2vw, 11px);
+  font-weight: 500;
+  color: var(--label-text, #ffffff);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  line-height: 1.2;
+  max-width: 90%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
 }
 
 /* Grooves overlay */
@@ -260,23 +306,67 @@ body::before {
   z-index: 5;
 }
 
+/* Light reflection on vinyl */
+.vinyl-reflection {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: linear-gradient(
+    135deg,
+    rgba(255,255,255,0.15) 0%,
+    transparent 30%,
+    transparent 70%,
+    rgba(255,255,255,0.05) 100%
+  );
+  z-index: 6;
+  pointer-events: none;
+}
+
 .album:hover .vinyl-disc {
-  transform: translate(-50%, -50%) translateX(25%);
-  opacity: 1;
+  transform: translateY(-50%) translateX(15%) rotate(0deg);
+  animation: gentleSpin 6s linear infinite;
+  animation-delay: 0.5s;
+}
+
+@keyframes gentleSpin {
+  from { transform: translateY(-50%) translateX(15%) rotate(0deg); }
+  to { transform: translateY(-50%) translateX(15%) rotate(360deg); }
 }
 
 /* ============================================
    VINYL STYLES
    ============================================ */
 
-/* Classic black vinyl */
+/* Classic vinyl - uses --vinyl-color, defaults to black */
 .vinyl-classic {
   background: radial-gradient(circle at center,
     transparent 13%,
-    #0a0a0a 13%,
-    #1a1816 50%,
-    #0d0b0a 100%
+    var(--vinyl-color, #0a0a0a) 13%,
+    color-mix(in srgb, var(--vinyl-color, #1a1816) 85%, white 15%) 50%,
+    var(--vinyl-color, #0d0b0a) 100%
   );
+}
+
+/* Add sheen/reflection effect for colored classic vinyl */
+.vinyl-classic::after {
+  content: '';
+  position: absolute;
+  inset: 14%;
+  border-radius: 50%;
+  background: 
+    repeating-radial-gradient(
+      circle at center,
+      transparent 0px,
+      rgba(255,255,255,0.04) 1px,
+      transparent 2px
+    ),
+    linear-gradient(
+      135deg,
+      rgba(255,255,255,0.08) 0%,
+      transparent 50%,
+      rgba(0,0,0,0.1) 100%
+    );
+  z-index: 5;
 }
 
 /* Translucent / See-through */
@@ -375,17 +465,21 @@ body::before {
 /* Glow effect for colored vinyl */
 .vinyl-glow {
   position: absolute;
-  inset: -20%;
+  top: 50%;
+  right: 0;
+  width: 70%;
+  height: 120%;
   border-radius: 50%;
   background: radial-gradient(circle at center, var(--vinyl-color) 0%, transparent 60%);
-  opacity: 0;
-  transition: opacity 0.4s var(--ease-out);
-  z-index: -2;
-  filter: blur(30px);
+  opacity: 0.25;
+  transform: translateY(-50%);
+  z-index: 0;
+  filter: blur(40px);
+  pointer-events: none;
 }
 
 .album:hover .vinyl-glow {
-  opacity: 0.3;
+  opacity: 0.5;
 }
 
 /* Info overlay */
@@ -393,7 +487,7 @@ body::before {
   position: absolute;
   bottom: 0;
   left: 0;
-  right: 0;
+  width: 69%; /* Match cover width */
   padding: 60px 16px 16px;
   background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 100%);
   border-radius: 0 0 var(--radius) var(--radius);
@@ -402,6 +496,7 @@ body::before {
   transition: 
     opacity 0.4s var(--ease-out),
     transform 0.4s var(--ease-out);
+  z-index: 3;
 }
 
 .album:hover .album-info {
@@ -410,9 +505,9 @@ body::before {
 }
 
 .album-title {
-  font-family: 'Instrument Serif', Georgia, serif;
-  font-size: 18px;
-  font-weight: 400;
+  font-family: 'Syne', system-ui, sans-serif;
+  font-size: 16px;
+  font-weight: 600;
   margin-bottom: 2px;
   white-space: nowrap;
   overflow: hidden;
@@ -430,7 +525,7 @@ body::before {
 .album-year {
   position: absolute;
   top: 12px;
-  right: 12px;
+  left: calc(69% - 50px); /* Position within cover area */
   font-size: 11px;
   color: var(--text-dim);
   background: rgba(0,0,0,0.6);
@@ -438,6 +533,7 @@ body::before {
   border-radius: 2px;
   opacity: 0;
   transition: opacity 0.3s var(--ease-out);
+  z-index: 4;
 }
 
 .album:hover .album-year {
@@ -506,10 +602,10 @@ body::before {
 }
 
 .now-playing-title {
-  font-family: 'Instrument Serif', Georgia, serif;
+  font-family: 'Syne', system-ui, sans-serif;
   font-size: clamp(24px, 4vw, 42px);
   margin-bottom: 8px;
-  font-weight: 400;
+  font-weight: 700;
 }
 
 .now-playing-artist {
@@ -545,9 +641,9 @@ body::before {
 }
 
 .empty-state h2 {
-  font-family: 'Instrument Serif', Georgia, serif;
+  font-family: 'Syne', system-ui, sans-serif;
   font-size: 32px;
-  font-weight: 400;
+  font-weight: 700;
   color: var(--text);
   margin-bottom: 12px;
 }
