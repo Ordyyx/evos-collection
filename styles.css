@@ -1,0 +1,635 @@
+/* ============================================
+   WAX — Vinyl Collection Display
+   A warm, tactile aesthetic inspired by 
+   record shops and living room shelves
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500&display=swap');
+
+:root {
+  /* Warm dark palette */
+  --bg: #0d0c0a;
+  --surface: #161412;
+  --surface-elevated: #1e1b18;
+  --border: #2a2622;
+  
+  /* Typography */
+  --text: #f5f2ed;
+  --text-muted: #8a857d;
+  --text-dim: #5c5751;
+  
+  /* Accent — aged gold */
+  --accent: #c9a66b;
+  --accent-glow: rgba(201, 166, 107, 0.15);
+  
+  /* Vinyl grooves */
+  --groove-1: #1a1816;
+  --groove-2: #141210;
+  
+  /* Sizing */
+  --album-size: 280px;
+  --gap: 32px;
+  --radius: 4px;
+  
+  /* Transitions */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Responsive sizing */
+@media (max-width: 1400px) {
+  :root { --album-size: 240px; --gap: 28px; }
+}
+@media (max-width: 1100px) {
+  :root { --album-size: 200px; --gap: 24px; }
+}
+@media (max-width: 800px) {
+  :root { --album-size: 160px; --gap: 16px; }
+}
+@media (max-width: 500px) {
+  :root { --album-size: calc(50vw - 24px); --gap: 12px; }
+}
+
+/* TV mode — bigger artwork */
+@media (min-width: 1800px) {
+  :root { --album-size: 320px; --gap: 40px; }
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* Subtle texture overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  opacity: 0.03;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+/* ============================================
+   HEADER
+   ============================================ */
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 24px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(to bottom, var(--bg) 0%, transparent 100%);
+  pointer-events: none;
+}
+
+.header > * {
+  pointer-events: auto;
+}
+
+.logo {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: 28px;
+  font-style: italic;
+  color: var(--accent);
+  letter-spacing: -0.02em;
+  user-select: none;
+}
+
+.record-count {
+  font-size: 13px;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.record-count span {
+  color: var(--text);
+  font-weight: 500;
+}
+
+/* ============================================
+   MAIN GRID
+   ============================================ */
+
+.collection {
+  padding: 120px 40px 80px;
+  max-width: 1800px;
+  margin: 0 auto;
+}
+
+@media (max-width: 600px) {
+  .collection {
+    padding: 100px 16px 60px;
+  }
+  .header {
+    padding: 20px 16px;
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--album-size), 1fr));
+  gap: var(--gap);
+}
+
+/* ============================================
+   ALBUM CARD
+   ============================================ */
+
+.album {
+  position: relative;
+  aspect-ratio: 1;
+  cursor: pointer;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+.album-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.5s var(--ease-out);
+}
+
+.album:hover .album-inner {
+  transform: scale(1.02) translateY(-4px);
+}
+
+/* Cover artwork */
+.album-cover {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 
+    0 4px 12px rgba(0,0,0,0.4),
+    0 20px 40px rgba(0,0,0,0.3);
+  transition: box-shadow 0.5s var(--ease-out);
+}
+
+.album:hover .album-cover {
+  box-shadow: 
+    0 8px 24px rgba(0,0,0,0.5),
+    0 30px 60px rgba(0,0,0,0.4),
+    0 0 0 1px var(--border);
+}
+
+.album-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s var(--ease-out);
+}
+
+.album:hover .album-cover img {
+  transform: scale(1.05);
+}
+
+/* Vinyl disc peeking out */
+.vinyl-disc {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 92%;
+  height: 92%;
+  border-radius: 50%;
+  transform: translate(-50%, -50%) translateX(0%);
+  opacity: 0;
+  transition: 
+    transform 0.6s var(--ease-out),
+    opacity 0.4s var(--ease-out);
+  z-index: -1;
+  box-shadow: 
+    inset 0 0 30px rgba(0,0,0,0.5),
+    0 4px 20px rgba(0,0,0,0.4);
+  overflow: hidden;
+}
+
+/* Center label */
+.vinyl-disc::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 28%;
+  height: 28%;
+  border-radius: 50%;
+  background: 
+    radial-gradient(circle at center, #1a1a1a 8%, transparent 8.5%),
+    radial-gradient(circle at center, var(--accent) 9%, var(--surface-elevated) 9%);
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+/* Grooves overlay */
+.vinyl-disc::after {
+  content: '';
+  position: absolute;
+  inset: 14%;
+  border-radius: 50%;
+  background: repeating-radial-gradient(
+    circle at center,
+    transparent 0px,
+    rgba(255,255,255,0.03) 1px,
+    transparent 2px
+  );
+  z-index: 5;
+}
+
+.album:hover .vinyl-disc {
+  transform: translate(-50%, -50%) translateX(25%);
+  opacity: 1;
+}
+
+/* ============================================
+   VINYL STYLES
+   ============================================ */
+
+/* Classic black vinyl */
+.vinyl-classic {
+  background: radial-gradient(circle at center,
+    transparent 13%,
+    #0a0a0a 13%,
+    #1a1816 50%,
+    #0d0b0a 100%
+  );
+}
+
+/* Translucent / See-through */
+.vinyl-translucent {
+  background: radial-gradient(circle at center,
+    transparent 13%,
+    var(--vinyl-color) 13%
+  );
+  opacity: 0;
+}
+
+.vinyl-translucent::after {
+  background: 
+    repeating-radial-gradient(
+      circle at center,
+      transparent 0px,
+      rgba(255,255,255,0.08) 1px,
+      transparent 2px
+    );
+}
+
+.album:hover .vinyl-translucent {
+  opacity: 0.85;
+}
+
+/* Marble / Swirl */
+.vinyl-marble {
+  background: radial-gradient(circle at center,
+    transparent 13%,
+    var(--vinyl-color) 13%
+  );
+  position: relative;
+}
+
+.vinyl-marble .marble-swirl {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: 
+    radial-gradient(ellipse 80% 40% at 30% 40%, var(--vinyl-color2) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 80% at 70% 60%, var(--vinyl-color2) 0%, transparent 40%),
+    radial-gradient(ellipse 50% 30% at 50% 80%, var(--vinyl-color2) 0%, transparent 50%),
+    radial-gradient(ellipse 40% 60% at 20% 70%, var(--vinyl-color2) 0%, transparent 45%);
+  opacity: 0.7;
+  animation: slowSpin 20s linear infinite;
+}
+
+@keyframes slowSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Splatter */
+.vinyl-splatter {
+  background: radial-gradient(circle at center,
+    transparent 13%,
+    var(--vinyl-color) 13%
+  );
+}
+
+.vinyl-splatter .splatter-layer {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(ellipse 15% 8% at 25% 35%, var(--vinyl-color2) 0%, transparent 100%),
+    radial-gradient(ellipse 8% 20% at 65% 25%, var(--vinyl-color2) 0%, transparent 100%),
+    radial-gradient(ellipse 12% 6% at 45% 70%, var(--vinyl-color2) 0%, transparent 100%),
+    radial-gradient(ellipse 6% 15% at 75% 55%, var(--vinyl-color2) 0%, transparent 100%),
+    radial-gradient(ellipse 10% 10% at 35% 55%, var(--vinyl-color2) 0%, transparent 100%),
+    radial-gradient(ellipse 8% 12% at 55% 40%, var(--vinyl-color2) 0%, transparent 100%),
+    radial-gradient(ellipse 5% 18% at 20% 60%, var(--vinyl-color2) 0%, transparent 100%),
+    radial-gradient(ellipse 14% 7% at 80% 75%, var(--vinyl-color2) 0%, transparent 100%);
+}
+
+/* Picture disc */
+.vinyl-picture {
+  background: radial-gradient(circle at center,
+    transparent 13%,
+    #1a1a1a 13%,
+    #1a1a1a 14%,
+    transparent 14%
+  );
+  overflow: hidden;
+}
+
+.vinyl-picture .picture-layer {
+  position: absolute;
+  inset: 14%;
+  border-radius: 50%;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.9;
+}
+
+/* Glow effect for colored vinyl */
+.vinyl-glow {
+  position: absolute;
+  inset: -20%;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, var(--vinyl-color) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.4s var(--ease-out);
+  z-index: -2;
+  filter: blur(30px);
+}
+
+.album:hover .vinyl-glow {
+  opacity: 0.3;
+}
+
+/* Info overlay */
+.album-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 60px 16px 16px;
+  background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 100%);
+  border-radius: 0 0 var(--radius) var(--radius);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: 
+    opacity 0.4s var(--ease-out),
+    transform 0.4s var(--ease-out);
+}
+
+.album:hover .album-info {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.album-title {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: 18px;
+  font-weight: 400;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.album-artist {
+  font-size: 13px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.album-year {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: 11px;
+  color: var(--text-dim);
+  background: rgba(0,0,0,0.6);
+  padding: 4px 8px;
+  border-radius: 2px;
+  opacity: 0;
+  transition: opacity 0.3s var(--ease-out);
+}
+
+.album:hover .album-year {
+  opacity: 1;
+}
+
+/* ============================================
+   NOW PLAYING MODAL
+   ============================================ */
+
+.now-playing-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.92);
+  backdrop-filter: blur(20px);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: 
+    opacity 0.4s var(--ease-out),
+    visibility 0.4s;
+  cursor: pointer;
+}
+
+.now-playing-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.now-playing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  padding: 40px;
+  max-width: 90vw;
+  transform: scale(0.95) translateY(20px);
+  transition: transform 0.5s var(--ease-spring);
+}
+
+.now-playing-overlay.active .now-playing {
+  transform: scale(1) translateY(0);
+}
+
+.now-playing-cover {
+  width: min(70vh, 70vw);
+  aspect-ratio: 1;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 
+    0 20px 60px rgba(0,0,0,0.6),
+    0 40px 100px rgba(0,0,0,0.4);
+}
+
+.now-playing-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.now-playing-details {
+  text-align: center;
+}
+
+.now-playing-title {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: clamp(24px, 4vw, 42px);
+  margin-bottom: 8px;
+  font-weight: 400;
+}
+
+.now-playing-artist {
+  font-size: clamp(14px, 2vw, 18px);
+  color: var(--text-muted);
+}
+
+.now-playing-year {
+  font-size: 14px;
+  color: var(--text-dim);
+  margin-top: 12px;
+}
+
+/* Escape hint */
+.escape-hint {
+  position: absolute;
+  bottom: 24px;
+  font-size: 12px;
+  color: var(--text-dim);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ============================================
+   EMPTY STATE
+   ============================================ */
+
+.empty-state {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 80px 20px;
+  color: var(--text-muted);
+}
+
+.empty-state h2 {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: 32px;
+  font-weight: 400;
+  color: var(--text);
+  margin-bottom: 12px;
+}
+
+.empty-state p {
+  font-size: 15px;
+  max-width: 400px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.empty-state code {
+  display: inline-block;
+  background: var(--surface);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-family: 'SF Mono', Consolas, monospace;
+  font-size: 13px;
+  margin-top: 16px;
+  color: var(--accent);
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.album {
+  animation: fadeInUp 0.6s var(--ease-out) backwards;
+}
+
+/* Stagger album animations */
+.album:nth-child(1) { animation-delay: 0.0s; }
+.album:nth-child(2) { animation-delay: 0.05s; }
+.album:nth-child(3) { animation-delay: 0.1s; }
+.album:nth-child(4) { animation-delay: 0.15s; }
+.album:nth-child(5) { animation-delay: 0.2s; }
+.album:nth-child(6) { animation-delay: 0.25s; }
+.album:nth-child(7) { animation-delay: 0.3s; }
+.album:nth-child(8) { animation-delay: 0.35s; }
+.album:nth-child(9) { animation-delay: 0.4s; }
+.album:nth-child(10) { animation-delay: 0.45s; }
+.album:nth-child(11) { animation-delay: 0.5s; }
+.album:nth-child(12) { animation-delay: 0.55s; }
+.album:nth-child(n+13) { animation-delay: 0.6s; }
+
+/* ============================================
+   SCROLLBAR
+   ============================================ */
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-dim);
+}
+
+/* ============================================
+   SELECTION
+   ============================================ */
+
+::selection {
+  background: var(--accent);
+  color: var(--bg);
+}
