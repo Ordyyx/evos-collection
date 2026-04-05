@@ -570,9 +570,11 @@ body::before {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 32px;
+  gap: 24px;
   padding: 40px;
   max-width: 90vw;
+  max-height: 90vh;
+  overflow-y: auto;
   transform: scale(0.95) translateY(20px);
   transition: transform 0.5s var(--ease-spring);
 }
@@ -611,12 +613,6 @@ body::before {
 .now-playing-artist {
   font-size: clamp(14px, 2vw, 18px);
   color: var(--text-muted);
-}
-
-.now-playing-year {
-  font-size: 14px;
-  color: var(--text-dim);
-  margin-top: 12px;
 }
 
 /* Escape hint */
@@ -728,4 +724,206 @@ body::before {
 ::selection {
   background: var(--accent);
   color: var(--bg);
+}
+
+/* ============================================
+   ALBUM RATING BADGE
+   ============================================ */
+
+.album-rating {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  font-size: 10px;
+  color: var(--accent);
+  background: rgba(0,0,0,0.7);
+  padding: 4px 6px;
+  border-radius: 2px;
+  opacity: 0;
+  transition: opacity 0.3s var(--ease-out);
+  z-index: 4;
+  letter-spacing: 1px;
+}
+
+.album:hover .album-rating {
+  opacity: 1;
+}
+
+/* ============================================
+   NOW PLAYING — ENHANCED
+   ============================================ */
+
+.now-playing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  padding: 40px;
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow-y: auto;
+  transform: scale(0.95) translateY(20px);
+  transition: transform 0.5s var(--ease-spring);
+}
+
+/* Rating stars */
+.now-playing-rating {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.now-playing-rating .star {
+  font-size: 20px;
+  color: var(--text-dim);
+}
+
+.now-playing-rating .star.filled {
+  color: var(--accent);
+}
+
+/* Meta info (year + genre) */
+.now-playing-meta {
+  font-size: 14px;
+  color: var(--text-dim);
+  margin-top: 8px;
+}
+
+.meta-separator {
+  margin: 0 8px;
+  opacity: 0.5;
+}
+
+/* External links */
+.now-playing-links {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.link-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: 24px;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s var(--ease-out);
+  cursor: pointer;
+}
+
+.link-button svg {
+  width: 18px;
+  height: 18px;
+}
+
+.link-apple {
+  background: linear-gradient(135deg, #fc3c44 0%, #e91e63 100%);
+  color: white;
+}
+
+.link-apple:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(252, 60, 68, 0.4);
+}
+
+.link-discogs {
+  background: var(--surface-elevated);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.link-discogs:hover {
+  background: var(--border);
+  transform: translateY(-2px);
+}
+
+/* Tracklist */
+.now-playing-tracklist {
+  width: 100%;
+  max-width: 600px;
+  margin-top: 16px;
+}
+
+.tracklist-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 24px;
+}
+
+.tracklist-side {
+  background: var(--surface);
+  border-radius: 8px;
+  padding: 20px;
+  border: 1px solid var(--border);
+}
+
+.side-label {
+  font-family: 'Syne', system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.track-list {
+  list-style: none;
+  counter-reset: track;
+}
+
+.track-list li {
+  counter-increment: track;
+  padding: 8px 0;
+  font-size: 14px;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.track-list li:last-child {
+  border-bottom: none;
+}
+
+.track-list li::before {
+  content: counter(track);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-dim);
+  min-width: 16px;
+}
+
+/* Mobile adjustments for now playing */
+@media (max-width: 600px) {
+  .now-playing {
+    padding: 24px 16px;
+    gap: 16px;
+  }
+  
+  .now-playing-cover {
+    width: 85vw;
+  }
+  
+  .now-playing-links {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .link-button {
+    justify-content: center;
+    width: 100%;
+  }
+  
+  .tracklist-container {
+    grid-template-columns: 1fr;
+  }
 }

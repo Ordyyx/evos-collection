@@ -22,17 +22,24 @@
 
     <!-- Now Playing Modal -->
     <div class="now-playing-overlay" id="nowPlaying">
-      <div class="now-playing">
+      <div class="now-playing" onclick="event.stopPropagation()">
         <div class="now-playing-cover">
           <img id="npCover" src="" alt="" />
         </div>
         <div class="now-playing-details">
+          <div class="now-playing-rating" id="npRating"></div>
           <h1 class="now-playing-title" id="npTitle"></h1>
           <p class="now-playing-artist" id="npArtist"></p>
-          <p class="now-playing-year" id="npYear"></p>
+          <p class="now-playing-meta">
+            <span id="npYear"></span>
+            <span class="meta-separator" id="npGenreSeparator">•</span>
+            <span id="npGenre"></span>
+          </p>
+          <div class="now-playing-links" id="npLinks"></div>
         </div>
+        <div class="now-playing-tracklist" id="npTracklist"></div>
       </div>
-      <span class="escape-hint">Click or press Esc to close</span>
+      <span class="escape-hint">Click outside or press Esc to close • ← → to browse</span>
     </div>
 
     <script src="app.js"></script>

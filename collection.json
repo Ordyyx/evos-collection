@@ -4,7 +4,32 @@
     "album": "Dangerous Woman",
     "year": 2016,
     "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/3f/70/0f/3f700f55-1c91-c890-8cb7-b8886f87b7f6/16UMGIM30042.rgb.jpg/600x600bb.jpg",
+    "genre": "Pop",
+    "rating": 4,
+    "tracks": [
+      { "side": "a", "title": "Moonlight" },
+      { "side": "a", "title": "Dangerous Woman" },
+      { "side": "a", "title": "Be Alright" },
+      { "side": "b", "title": "Into You" },
+      { "side": "b", "title": "Side To Side" },
+      { "side": "b", "title": "Let Me Love You" },
+      { "side": "b", "title": "Greedy" },
+      { "side": "c", "title": "Leave Me Lonely" },
+      { "side": "c", "title": "Everyday" },
+      { "side": "c", "title": "Sometimes" },
+      { "side": "c", "title": "I Don't Care" },
+      { "side": "d", "title": "Bad Decisions" },
+      { "side": "d", "title": "Touch It" },
+      { "side": "d", "title": "Knew Better / Forever Boy" },
+      { "side": "d", "title": "Thinking Bout You" }
+    ],
+    "links": {
+      "appleMusic": "https://music.apple.com/gb/album/dangerous-woman/1440843597",
+      "discogs": "https://www.discogs.com/release/15113569-Ariana-Grande-Dangerous-Woman"
+    },
     "vinyl": {
+      "color": "#1a1a1a",
+      "style": "classic",
       "labelColor": "#000000",
       "labelText": "DW"
     }
@@ -14,7 +39,29 @@
     "album": "thank u, next",
     "year": 2019,
     "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/9f/39/bf/9f39bf60-a01c-39d9-cfa9-95d9b7b7dc0c/19UMGIM03689.rgb.jpg/600x600bb.jpg",
+    "genre": "Pop",
+    "rating": 4,
+    "tracks": [
+      { "side": "a", "title": "Imagine" },
+      { "side": "a", "title": "Needy" },
+      { "side": "a", "title": "NASA" },
+      { "side": "b", "title": "Bloodline" },
+      { "side": "b", "title": "Fake Smile" },
+      { "side": "b", "title": "Bad Idea" },
+      { "side": "c", "title": "Make Up" },
+      { "side": "c", "title": "Ghostin" },
+      { "side": "c", "title": "In My Head" },
+      { "side": "d", "title": "7 Rings" },
+      { "side": "d", "title": "Thank U, Next" },
+      { "side": "d", "title": "Break Up With Your Girlfriend, I'm Bored" }
+    ],
+    "links": {
+      "appleMusic": "https://music.apple.com/gb/album/thank-u-next/1450330588",
+      "discogs": "https://www.discogs.com/release/13581613-Ariana-Grande-Thank-U-Next"
+    },
     "vinyl": {
+      "color": "#1a1a1a",
+      "style": "classic",
       "labelColor": "#e8b4c8",
       "labelText": "TUN"
     }
@@ -24,6 +71,22 @@
     "album": "dont smile at me",
     "year": 2017,
     "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/02/1d/30/021d3036-5503-3ed3-df00-882f2833a6ae/17UM1IM17026.rgb.jpg/600x600bb.jpg",
+    "genre": "Alternative",
+    "rating": 5,
+    "tracks": [
+      { "side": "a", "title": "Copycat" },
+      { "side": "a", "title": "Idontwannabeyouanymore" },
+      { "side": "a", "title": "My Boy" },
+      { "side": "a", "title": "Watch" },
+      { "side": "b", "title": "Party Favor" },
+      { "side": "b", "title": "Bellyache" },
+      { "side": "b", "title": "Ocean Eyes" },
+      { "side": "b", "title": "Hostage" }
+    ],
+    "links": {
+      "appleMusic": "https://music.apple.com/gb/album/dont-smile-at-me/1440898929",
+      "discogs": "https://www.discogs.com/release/10882729-Billie-Eilish-Dont-Smile-At-Me"
+    },
     "vinyl": {
       "color": "#fc1303",
       "style": "classic",
@@ -33,22 +96,19 @@
   },
   {
     "artist": "Billie Eilish",
-    "album": "WHEN WE ALL FALL ASLEEP, WHERE DO WE GO?",
-    "year": 2019,
-    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/1a/37/d1/1a37d1b1-8508-54f2-f541-bf4e437dda76/19UMGIM05028.rgb.jpg/600x600bb.jpg",
-    "vinyl": {
-      "color": "#fc9003",
-      "style": "classic",
-      "labelColor": "#000000",
-      "labelText": "WWAFAWDWG"
-    }
-  },
-  {
-    "artist": "Billie Eilish",
     "album": "Happier Than Ever",
     "year": 2021,
     "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/2d/f3/c9/2df3c9fd-e0eb-257c-c035-b04f05a66580/21UMGIM36691.rgb.jpg/600x600bb.jpg",
+    "genre": "",
+    "rating": 0,
+    "tracks": [],
+    "links": {
+      "appleMusic": "",
+      "discogs": ""
+    },
     "vinyl": {
+      "color": "#1a1a1a",
+      "style": "classic",
       "labelColor": "#ad8c63",
       "labelText": "HTE"
     }
@@ -58,9 +118,37 @@
     "album": "HIT ME HARD AND SOFT",
     "year": 2024,
     "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/92/9f/69/929f69f1-9977-3a44-d674-11f70c852d1b/24UMGIM36186.rgb.jpg/600x600bb.jpg",
+    "genre": "",
+    "rating": 0,
+    "tracks": [],
+    "links": {
+      "appleMusic": "",
+      "discogs": ""
+    },
     "vinyl": {
+      "color": "#1a1a1a",
+      "style": "classic",
       "labelColor": "#000000",
       "labelText": "HMHAS"
+    }
+  },
+  {
+    "artist": "Billie Eilish",
+    "album": "WHEN WE ALL FALL ASLEEP, WHERE DO WE GO?",
+    "year": 2019,
+    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/1a/37/d1/1a37d1b1-8508-54f2-f541-bf4e437dda76/19UMGIM05028.rgb.jpg/600x600bb.jpg",
+    "genre": "",
+    "rating": 0,
+    "tracks": [],
+    "links": {
+      "appleMusic": "",
+      "discogs": ""
+    },
+    "vinyl": {
+      "color": "#fc9003",
+      "style": "classic",
+      "labelColor": "#000000",
+      "labelText": "WWAFAWDWG"
     }
   },
   {
@@ -68,9 +156,18 @@
     "album": "CRASH",
     "year": 2022,
     "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/86/08/4f/86084fe8-8613-74a6-846a-f6419e030c5c/190296409165.jpg/600x600bb.jpg",
+    "genre": "",
+    "rating": 0,
+    "tracks": [],
+    "links": {
+      "appleMusic": "",
+      "discogs": ""
+    },
     "vinyl": {
-      "labelColor": "#FF0000",
-      "labelText": "Crash"
+      "color": "#1a1a1a",
+      "style": "classic",
+      "labelColor": "#ff0000",
+      "labelText": "CRASH"
     }
   },
   {
@@ -78,9 +175,18 @@
     "album": "Future Nostalgia: The Moonlight Edition",
     "year": 2021,
     "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/25/cd/d4/25cdd423-4a23-1913-04ed-921a58cccb7d/190295000639.jpg/600x600bb.jpg",
+    "genre": "",
+    "rating": 0,
+    "tracks": [],
+    "links": {
+      "appleMusic": "",
+      "discogs": ""
+    },
     "vinyl": {
+      "color": "#1a1a1a",
+      "style": "classic",
       "labelColor": "#53a1f9",
-      "labelText": "fn"
+      "labelText": "FN"
     }
   },
   {
@@ -88,9 +194,18 @@
     "album": "LM5",
     "year": 2018,
     "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/3a/08/86/3a088658-adbc-447f-1ad7-83ff75f7a3c6/886447073858.jpg/600x600bb.jpg",
+    "genre": "",
+    "rating": 0,
+    "tracks": [],
+    "links": {
+      "appleMusic": "",
+      "discogs": ""
+    },
     "vinyl": {
-      "labelColor": "#FFFFFF",
-      "labelText": "lm5"
+      "color": "#1a1a1a",
+      "style": "classic",
+      "labelColor": "#ffffff",
+      "labelText": "LM5"
     }
   },
   {
@@ -98,8 +213,17 @@
     "album": "Silence Between Songs",
     "year": 2023,
     "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/80/7d/dd/807ddd08-6729-62d8-e4a9-b106c6d8c584/196589361196.jpg/600x600bb.jpg",
+    "genre": "",
+    "rating": 0,
+    "tracks": [],
+    "links": {
+      "appleMusic": "",
+      "discogs": ""
+    },
     "vinyl": {
-      "labelColor": "#FFFFFF",
+      "color": "#1a1a1a",
+      "style": "classic",
+      "labelColor": "#ffffff",
       "labelText": "SBS"
     }
   },
@@ -108,6 +232,13 @@
     "album": "young forever",
     "year": 2022,
     "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/b3/04/da/b304da7d-055a-87d1-3310-889398f29f91/093624869535.jpg/600x600bb.jpg",
+    "genre": "",
+    "rating": 0,
+    "tracks": [],
+    "links": {
+      "appleMusic": "",
+      "discogs": ""
+    },
     "vinyl": {
       "color": "#ffa6b9",
       "style": "classic",
@@ -120,9 +251,18 @@
     "album": "My 21st Century Blues.",
     "year": 2023,
     "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/90/93/08/909308e3-94ca-dbf8-ebc7-0177bae4b9ad/197186999980.jpg/600x600bb.jpg",
+    "genre": "",
+    "rating": 0,
+    "tracks": [],
+    "links": {
+      "appleMusic": "",
+      "discogs": ""
+    },
     "vinyl": {
+      "color": "#1a1a1a",
+      "style": "classic",
       "labelColor": "#d97566",
-      "labelText": "M21cb"
+      "labelText": "M21CB"
     }
   },
   {
@@ -130,8 +270,15 @@
     "album": "Nightingale Lane. 7\" Test Pressing",
     "year": 2026,
     "cover": "https://t2.genius.com/unsafe/689x689/https%3A%2F%2Fimages.genius.com%2Fd72bba3907ce59b2ca46fff3840b1953.1000x1000x1.png",
+    "genre": "",
+    "rating": 0,
+    "tracks": [],
+    "links": {
+      "appleMusic": "",
+      "discogs": ""
+    },
     "vinyl": {
-      "color": "#FFFFFF",
+      "color": "#ffffff",
       "style": "classic",
       "labelColor": "#ffffff",
       "labelText": "NL"
@@ -142,11 +289,18 @@
     "album": "THIS MUSIC MAY CONTAIN HOPE.",
     "year": 2026,
     "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/50/05/10/5005106d-bb8a-32db-1172-f18405cf4a46/820200038890.jpg/600x600bb.jpg",
+    "genre": "",
+    "rating": 0,
+    "tracks": [],
+    "links": {
+      "appleMusic": "",
+      "discogs": ""
+    },
     "vinyl": {
-      "color": "#EAA221",
+      "color": "#eaa221",
       "style": "classic",
       "labelColor": "#b6faf5",
-      "labelText": "tmmch"
+      "labelText": "TMMCH"
     }
   },
   {
@@ -154,9 +308,18 @@
     "album": "BITE ME",
     "year": 2025,
     "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/d8/20/30/d82030c6-9b47-8638-3b72-1e18d5b09299/25UMGIM64791.rgb.jpg/600x600bb.jpg",
+    "genre": "",
+    "rating": 0,
+    "tracks": [],
+    "links": {
+      "appleMusic": "",
+      "discogs": ""
+    },
     "vinyl": {
-      "labelColor": "#FFFFFF",
-      "labelText": "bm"
+      "color": "#1a1a1a",
+      "style": "classic",
+      "labelColor": "#ffffff",
+      "labelText": "BM"
     }
   },
   {
@@ -164,11 +327,18 @@
     "album": "Man's Best Friend",
     "year": 2025,
     "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/cc/bc/ef/ccbcefb5-cf3a-1c55-0173-c37602827c7a/25UMGIM81699.rgb.jpg/600x600bb.jpg",
+    "genre": "",
+    "rating": 0,
+    "tracks": [],
+    "links": {
+      "appleMusic": "",
+      "discogs": ""
+    },
     "vinyl": {
-      "color": "#BCE6FE",
+      "color": "#bce6fe",
       "style": "classic",
       "labelColor": "#bedced",
-      "labelText": "mbf"
+      "labelText": "MBF"
     }
   },
   {
@@ -176,9 +346,18 @@
     "album": "Heavy Is The Head",
     "year": 2019,
     "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/6d/6c/94/6d6c94b1-dc63-df9b-40b1-f9732e463d4c/190295403003.jpg/600x600bb.jpg",
+    "genre": "",
+    "rating": 0,
+    "tracks": [],
+    "links": {
+      "appleMusic": "",
+      "discogs": ""
+    },
     "vinyl": {
+      "color": "#1a1a1a",
+      "style": "classic",
       "labelColor": "#0e241c",
-      "labelText": "hith"
+      "labelText": "HITH"
     }
   },
   {
@@ -186,11 +365,18 @@
     "album": "Ctrl",
     "year": 2017,
     "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/20/28/8f/20288f6f-fbf2-fb0f-6732-e7d334e1ff50/886446548432.jpg/600x600bb.jpg",
+    "genre": "",
+    "rating": 0,
+    "tracks": [],
+    "links": {
+      "appleMusic": "",
+      "discogs": ""
+    },
     "vinyl": {
       "color": "#10400a",
       "style": "classic",
       "labelColor": "#10400a",
-      "labelText": "ctrl"
+      "labelText": "CTRL"
     }
   },
   {
@@ -198,9 +384,18 @@
     "album": "SOS",
     "year": 2022,
     "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/bd/3b/a9/bd3ba9fb-9609-144f-bcfe-ead67b5f6ab3/196589564931.jpg/600x600bb.jpg",
+    "genre": "",
+    "rating": 0,
+    "tracks": [],
+    "links": {
+      "appleMusic": "",
+      "discogs": ""
+    },
     "vinyl": {
-      "labelColor": "#FF0000",
-      "labelText": "sos"
+      "color": "#1a1a1a",
+      "style": "classic",
+      "labelColor": "#ff0000",
+      "labelText": "SOS"
     }
   }
 ]
