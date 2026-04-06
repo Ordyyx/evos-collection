@@ -1,14 +1,19 @@
 /**
  * WAX — Vinyl Collection Display
- * Firebase-Powered Edition
+ * Firebase-Powered Edition with Enhanced Features
  * 
- * This version reads from Firestore in real-time.
- * Use the admin dashboard to manage your collection.
+ * Features:
+ * - Cache-busting for fresh data
+ * - Grid/Shelf view toggle with localStorage persistence
+ * - Improved mobile UX
  */
 
 import { subscribeToVinyls, onAuthChange } from './js/firebase-config.js';
 
 (function() {
+  // ============================================
+  // DOM ELEMENTS
+  // ============================================
   const grid = document.getElementById('grid');
   const countEl = document.getElementById('count');
   const loadingOverlay = document.getElementById('loadingOverlay');
@@ -23,9 +28,22 @@ import { subscribeToVinyls, onAuthChange } from './js/firebase-config.js';
   const npRating = document.getElementById('npRating');
   const npLinks = document.getElementById('npLinks');
   const npTracklist = document.getElementById('npTracklist');
+  const viewToggle = document.getElementById('viewToggle');
+  const viewButtons = viewToggle.querySelectorAll('.view-btn');
 
+  // ============================================
+  // STATE
+  // ============================================
   let collection = [];
   let unsubscribe = null;
+  let currentView = localStorage.getItem('vinylViewMode') || 'grid';
+
+  // ============================================
+  // INITIALIZATION
+  // ============================================
+  
+  // Initialize view mode from localStorage
+  initializeViewMode();
 
   // Show/hide admin link based on auth
   onAuthChange((user) => {
@@ -36,7 +54,58 @@ import { subscribeToVinyls, onAuthChange } from './js/firebase-config.js';
     }
   });
 
-  // Generate vinyl disc HTML based on style
+  // ============================================
+  // VIEW TOGGLE FUNCTIONALITY
+  // ============================================
+  
+  function initializeViewMode() {
+    // Set initial active state
+    viewButtons.forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.view === currentView);
+    });
+    
+    // Apply view class to grid
+    grid.classList.toggle('shelf-view', currentView === 'shelf');
+  }
+
+  // View toggle event listeners
+  viewButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const newView = btn.dataset.view;
+      if (newView === currentView) return;
+      
+      // Update state
+      currentView = newView;
+      localStorage.setItem('vinylViewMode', newView);
+      
+      // Update button states
+      viewButtons.forEach(b => {
+        b.classList.toggle('active', b.dataset.view === newView);
+      });
+      
+      // Animate view change
+      grid.style.opacity = '0';
+      grid.style.transform = 'translateY(10px)';
+      
+      setTimeout(() => {
+        grid.classList.toggle('shelf-view', newView === 'shelf');
+        
+        // Re-render collection for the new view
+        renderCollection(collection);
+        
+        // Animate in
+        requestAnimationFrame(() => {
+          grid.style.opacity = '1';
+          grid.style.transform = 'translateY(0)';
+        });
+      }, 200);
+    });
+  });
+
+  // ============================================
+  // VINYL DISC GENERATION
+  // ============================================
+  
   function createVinylDisc(record) {
     const vinyl = record.vinyl || {};
     const color = vinyl.color || '#1a1a1a';
@@ -84,7 +153,10 @@ import { subscribeToVinyls, onAuthChange } from './js/firebase-config.js';
     return brightness > 128;
   }
 
-  // Generate star rating HTML
+  // ============================================
+  // RATING & LINKS GENERATION
+  // ============================================
+  
   function createRatingStars(rating) {
     if (!rating || rating === 0) return '';
     
@@ -99,7 +171,6 @@ import { subscribeToVinyls, onAuthChange } from './js/firebase-config.js';
     return stars;
   }
 
-  // Generate links HTML
   function createLinksHTML(links) {
     if (!links) return '';
     
@@ -122,7 +193,10 @@ import { subscribeToVinyls, onAuthChange } from './js/firebase-config.js';
     return html;
   }
 
-  // Generate tracklist HTML grouped by side
+  // ============================================
+  // TRACKLIST GENERATION
+  // ============================================
+  
   function createTracklistHTML(tracks) {
     if (!tracks || tracks.length === 0) return '';
     
@@ -154,7 +228,10 @@ import { subscribeToVinyls, onAuthChange } from './js/firebase-config.js';
     return html;
   }
 
-  // Render albums
+  // ============================================
+  // RENDER COLLECTION
+  // ============================================
+  
   function renderCollection(vinyls) {
     collection = vinyls;
     countEl.textContent = collection.length;
@@ -174,7 +251,16 @@ import { subscribeToVinyls, onAuthChange } from './js/firebase-config.js';
       return;
     }
 
-    // Clear and re-render
+    // Render based on current view mode
+    if (currentView === 'shelf') {
+      renderShelfView();
+    } else {
+      renderGridView();
+    }
+  }
+
+  // Grid View Rendering
+  function renderGridView() {
     grid.innerHTML = '';
     
     collection.forEach((record, index) => {
@@ -182,7 +268,6 @@ import { subscribeToVinyls, onAuthChange } from './js/firebase-config.js';
       album.className = 'album';
       album.style.animationDelay = `${Math.min(index * 0.05, 0.6)}s`;
       
-      // Add rating badge if rated
       const ratingBadge = record.rating && record.rating > 0 
         ? `<span class="album-rating">${'★'.repeat(record.rating)}</span>` 
         : '';
@@ -208,7 +293,101 @@ import { subscribeToVinyls, onAuthChange } from './js/firebase-config.js';
     });
   }
 
-  // Now Playing functions
+  // Shelf View Rendering
+  function renderShelfView() {
+    grid.innerHTML = '';
+    
+    // Create shelf container
+    const shelfContainer = document.createElement('div');
+    shelfContainer.className = 'shelf-container';
+    
+    // Calculate items per shelf based on viewport
+    const itemsPerShelf = getItemsPerShelf();
+    
+    // Group records into shelves
+    for (let i = 0; i < collection.length; i += itemsPerShelf) {
+      const shelfRecords = collection.slice(i, i + itemsPerShelf);
+      const shelf = createShelf(shelfRecords, i);
+      shelfContainer.appendChild(shelf);
+    }
+    
+    grid.appendChild(shelfContainer);
+  }
+
+  function getItemsPerShelf() {
+    const width = window.innerWidth;
+    if (width < 500) return 4;
+    if (width < 768) return 6;
+    if (width < 1024) return 8;
+    if (width < 1400) return 10;
+    return 12;
+  }
+
+  function createShelf(records, startIndex) {
+    const shelf = document.createElement('div');
+    shelf.className = 'vinyl-shelf';
+    
+    const shelfContent = document.createElement('div');
+    shelfContent.className = 'shelf-records';
+    
+    records.forEach((record, index) => {
+      const item = document.createElement('div');
+      item.className = 'shelf-record';
+      item.style.animationDelay = `${Math.min((startIndex + index) * 0.03, 0.6)}s`;
+      
+      // Calculate slight random tilt for realism
+      const tilt = (Math.random() - 0.5) * 4;
+      item.style.setProperty('--tilt', `${tilt}deg`);
+      
+      item.innerHTML = `
+        <div class="shelf-record-inner">
+          <img src="${record.cover}" alt="${record.album} by ${record.artist}" loading="lazy">
+          <div class="shelf-record-spine">
+            <span class="spine-artist">${record.artist}</span>
+            <span class="spine-title">${record.album}</span>
+          </div>
+        </div>
+      `;
+      
+      item.addEventListener('click', () => openNowPlaying(record));
+      
+      // Touch feedback for mobile
+      item.addEventListener('touchstart', () => {
+        item.classList.add('touching');
+      }, { passive: true });
+      
+      item.addEventListener('touchend', () => {
+        item.classList.remove('touching');
+      }, { passive: true });
+      
+      shelfContent.appendChild(item);
+    });
+    
+    shelf.appendChild(shelfContent);
+    
+    // Add shelf base
+    const shelfBase = document.createElement('div');
+    shelfBase.className = 'shelf-base';
+    shelf.appendChild(shelfBase);
+    
+    return shelf;
+  }
+
+  // Handle window resize for shelf view
+  let resizeTimeout;
+  window.addEventListener('resize', () => {
+    if (currentView !== 'shelf') return;
+    
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+      renderShelfView();
+    }, 250);
+  });
+
+  // ============================================
+  // NOW PLAYING MODAL
+  // ============================================
+  
   function openNowPlaying(record) {
     npCover.src = record.cover;
     npCover.alt = `${record.album} by ${record.artist}`;
@@ -274,7 +453,48 @@ import { subscribeToVinyls, onAuthChange } from './js/firebase-config.js';
     }
   });
 
-  // Subscribe to Firestore updates
+  // ============================================
+  // SWIPE NAVIGATION FOR MOBILE
+  // ============================================
+  
+  let touchStartX = 0;
+  let touchEndX = 0;
+  
+  nowPlayingOverlay.addEventListener('touchstart', (e) => {
+    touchStartX = e.changedTouches[0].screenX;
+  }, { passive: true });
+  
+  nowPlayingOverlay.addEventListener('touchend', (e) => {
+    if (!nowPlayingOverlay.classList.contains('active')) return;
+    
+    touchEndX = e.changedTouches[0].screenX;
+    handleSwipe();
+  }, { passive: true });
+  
+  function handleSwipe() {
+    const swipeThreshold = 50;
+    const diff = touchStartX - touchEndX;
+    
+    if (Math.abs(diff) < swipeThreshold) return;
+    
+    const currentAlbum = npTitle.textContent;
+    const currentIndex = collection.findIndex(r => r.album === currentAlbum);
+    
+    if (diff > 0) {
+      // Swipe left - next
+      const nextIndex = (currentIndex + 1) % collection.length;
+      openNowPlaying(collection[nextIndex]);
+    } else {
+      // Swipe right - previous
+      const prevIndex = (currentIndex - 1 + collection.length) % collection.length;
+      openNowPlaying(collection[prevIndex]);
+    }
+  }
+
+  // ============================================
+  // FIREBASE SUBSCRIPTION
+  // ============================================
+  
   try {
     unsubscribe = subscribeToVinyls((vinyls) => {
       renderCollection(vinyls);

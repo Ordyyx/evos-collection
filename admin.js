@@ -91,6 +91,13 @@ const deleteRecordName = document.getElementById('deleteRecordName');
 const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
 const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
 
+// Discogs Auto-fill
+const discogsFetchBtn = document.getElementById('discogsFetchBtn');
+const discogsModal = document.getElementById('discogsModal');
+const discogsResults = document.getElementById('discogsResults');
+const cancelDiscogsBtn = document.getElementById('cancelDiscogsBtn');
+const labelInput = document.getElementById('label');
+
 // Toast
 const toastContainer = document.getElementById('toastContainer');
 
@@ -103,6 +110,10 @@ let currentUser = null;
 let unsubscribe = null;
 let currentTracks = [];
 let deleteTargetId = null;
+
+// Discogs API Configuration
+// Replace with your personal Discogs token from https://www.discogs.com/settings/developers
+const DISCOGS_TOKEN = 'YOUR_DISCOGS_TOKEN';
 
 // ============================================
 // AUTH HANDLERS
@@ -835,13 +846,248 @@ function removeToast(toast) {
 }
 
 // ============================================
+// DISCOGS API INTEGRATION
+// ============================================
+
+/**
+ * Search Discogs API for album information
+ * @param {string} artist - Artist name
+ * @param {string} album - Album title
+ * @returns {Promise<Array>} - Array of matching releases
+ */
+async function searchDiscogs(artist, album) {
+  if (DISCOGS_TOKEN === 'YOUR_DISCOGS_TOKEN') {
+    throw new Error('Please set your Discogs API token in admin.js');
+  }
+  
+  const query = encodeURIComponent(`${artist} ${album}`);
+  const url = `https://api.discogs.com/database/search?q=${query}&type=release&per_page=10`;
+  
+  const response = await fetch(url, {
+    headers: {
+      'Authorization': `Discogs token=${DISCOGS_TOKEN}`,
+      'User-Agent': 'VinylCollectionApp/1.0'
+    }
+  });
+  
+  if (response.status === 429) {
+    throw new Error('Rate limit exceeded. Please wait a moment and try again.');
+  }
+  
+  if (!response.ok) {
+    throw new Error(`Discogs API error: ${response.status}`);
+  }
+  
+  const data = await response.json();
+  return data.results || [];
+}
+
+/**
+ * Fetch detailed release information from Discogs
+ * @param {number} releaseId - Discogs release ID
+ * @returns {Promise<Object>} - Release details
+ */
+async function fetchReleaseDetails(releaseId) {
+  const url = `https://api.discogs.com/releases/${releaseId}`;
+  
+  const response = await fetch(url, {
+    headers: {
+      'Authorization': `Discogs token=${DISCOGS_TOKEN}`,
+      'User-Agent': 'VinylCollectionApp/1.0'
+    }
+  });
+  
+  if (!response.ok) {
+    throw new Error(`Failed to fetch release details: ${response.status}`);
+  }
+  
+  return await response.json();
+}
+
+/**
+ * Handle Discogs fetch button click
+ */
+discogsFetchBtn.addEventListener('click', async () => {
+  const artist = artistInput.value.trim();
+  const album = albumInput.value.trim();
+  
+  if (!artist || !album) {
+    showToast('Please enter both artist and album title first', 'error');
+    return;
+  }
+  
+  // Show loading state
+  discogsFetchBtn.disabled = true;
+  discogsFetchBtn.querySelector('.btn-text').style.display = 'none';
+  discogsFetchBtn.querySelector('.btn-loading').style.display = 'flex';
+  
+  try {
+    const results = await searchDiscogs(artist, album);
+    
+    if (results.length === 0) {
+      showToast('No results found on Discogs', 'error');
+      return;
+    }
+    
+    if (results.length === 1) {
+      // Only one result, auto-fill directly
+      await applyDiscogsResult(results[0]);
+    } else {
+      // Multiple results, show selection modal
+      showDiscogsResultsModal(results);
+    }
+  } catch (error) {
+    console.error('Discogs fetch error:', error);
+    showToast(error.message || 'Failed to fetch from Discogs', 'error');
+  } finally {
+    // Reset button state
+    discogsFetchBtn.disabled = false;
+    discogsFetchBtn.querySelector('.btn-text').style.display = 'flex';
+    discogsFetchBtn.querySelector('.btn-loading').style.display = 'none';
+  }
+});
+
+/**
+ * Show modal with multiple Discogs results for selection
+ * @param {Array} results - Array of Discogs search results
+ */
+function showDiscogsResultsModal(results) {
+  discogsResults.innerHTML = results.map(result => `
+    <div class="discogs-result-item" data-id="${result.id}">
+      <div class="discogs-result-cover">
+        <img src="${result.cover_image || result.thumb || ''}" 
+             alt="${result.title}" 
+             onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect fill=%22%23333%22 width=%22100%22 height=%22100%22/><text x=%2250%22 y=%2255%22 text-anchor=%22middle%22 fill=%22%23666%22 font-size=%2240%22>♫</text></svg>'">
+      </div>
+      <div class="discogs-result-info">
+        <div class="discogs-result-title">${result.title}</div>
+        <div class="discogs-result-artist">${result.title.split(' - ')[0] || 'Unknown Artist'}</div>
+        <div class="discogs-result-meta">
+          ${result.year ? `<span>📅 ${result.year}</span>` : ''}
+          ${result.genre ? `<span>🎵 ${result.genre[0]}</span>` : ''}
+          ${result.label ? `<span>🏷️ ${result.label[0]}</span>` : ''}
+        </div>
+      </div>
+    </div>
+  `).join('');
+  
+  // Add click handlers for result items
+  discogsResults.querySelectorAll('.discogs-result-item').forEach(item => {
+    item.addEventListener('click', async () => {
+      const resultId = item.dataset.id;
+      const result = results.find(r => r.id.toString() === resultId);
+      if (result) {
+        hideDiscogsModal();
+        await applyDiscogsResult(result);
+      }
+    });
+  });
+  
+  discogsModal.classList.add('active');
+}
+
+/**
+ * Hide the Discogs results modal
+ */
+function hideDiscogsModal() {
+  discogsModal.classList.remove('active');
+}
+
+cancelDiscogsBtn.addEventListener('click', hideDiscogsModal);
+
+discogsModal.addEventListener('click', (e) => {
+  if (e.target === discogsModal) {
+    hideDiscogsModal();
+  }
+});
+
+/**
+ * Apply selected Discogs result to the form
+ * @param {Object} result - Discogs search result
+ */
+async function applyDiscogsResult(result) {
+  try {
+    // Fetch detailed release info for tracklist
+    const details = await fetchReleaseDetails(result.id);
+    
+    // Fill in year
+    if (details.year || result.year) {
+      yearInput.value = details.year || result.year;
+    }
+    
+    // Fill in genre
+    if (details.genres && details.genres.length > 0) {
+      genreInput.value = details.genres[0];
+    } else if (result.genre && result.genre.length > 0) {
+      genreInput.value = result.genre[0];
+    }
+    
+    // Fill in label
+    if (details.labels && details.labels.length > 0) {
+      labelInput.value = details.labels[0].name;
+    } else if (result.label && result.label.length > 0) {
+      labelInput.value = result.label[0];
+    }
+    
+    // Fill in cover art
+    if (details.images && details.images.length > 0) {
+      const coverUrl = details.images[0].uri || details.images[0].resource_url;
+      if (coverUrl) {
+        coverInput.value = coverUrl;
+        coverPreviewImg.src = coverUrl;
+        coverPreview.style.display = 'block';
+      }
+    } else if (result.cover_image) {
+      coverInput.value = result.cover_image;
+      coverPreviewImg.src = result.cover_image;
+      coverPreview.style.display = 'block';
+    }
+    
+    // Fill in tracklist
+    if (details.tracklist && details.tracklist.length > 0) {
+      currentTracks = details.tracklist
+        .filter(track => track.type_ === 'track')
+        .map(track => ({
+          title: track.title,
+          duration: track.duration || ''
+        }));
+      renderTracks();
+    }
+    
+    // Fill in Discogs link
+    if (details.uri) {
+      discogsInput.value = details.uri;
+    }
+    
+    showToast('Album details filled from Discogs!', 'success');
+    
+  } catch (error) {
+    console.error('Error applying Discogs result:', error);
+    
+    // Fall back to basic info from search result
+    if (result.year) yearInput.value = result.year;
+    if (result.genre && result.genre[0]) genreInput.value = result.genre[0];
+    if (result.label && result.label[0]) labelInput.value = result.label[0];
+    if (result.cover_image) {
+      coverInput.value = result.cover_image;
+      coverPreviewImg.src = result.cover_image;
+      coverPreview.style.display = 'block';
+    }
+    
+    showToast('Filled basic info (detailed fetch failed)', 'info');
+  }
+}
+
+// ============================================
 // KEYBOARD SHORTCUTS
 // ============================================
 
 document.addEventListener('keydown', (e) => {
   // Escape to close modals/forms
   if (e.key === 'Escape') {
-    if (deleteModal.classList.contains('active')) {
+    if (discogsModal.classList.contains('active')) {
+      hideDiscogsModal();
+    } else if (deleteModal.classList.contains('active')) {
       hideDeleteModal();
     } else if (formView.style.display !== 'none') {
       switchView('list');

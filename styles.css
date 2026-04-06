@@ -2,6 +2,11 @@
    WAX — Vinyl Collection Display
    A warm, tactile aesthetic inspired by 
    record shops and living room shelves
+   
+   ENHANCED VERSION:
+   - Shelf view mode
+   - Improved mobile responsiveness
+   - View toggle controls
    ============================================ */
 
 @import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@400;500;600;700&display=swap");
@@ -31,9 +36,17 @@
   --gap: 32px;
   --radius: 4px;
 
+  /* Shelf sizing */
+  --shelf-record-width: 120px;
+  --shelf-height: 160px;
+
   /* Transitions */
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Safe areas for mobile */
+  --safe-area-top: env(safe-area-inset-top, 0px);
+  --safe-area-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 /* Responsive sizing */
@@ -41,24 +54,32 @@
   :root {
     --album-size: 240px;
     --gap: 28px;
+    --shelf-record-width: 100px;
+    --shelf-height: 140px;
   }
 }
 @media (max-width: 1100px) {
   :root {
     --album-size: 200px;
     --gap: 24px;
+    --shelf-record-width: 90px;
+    --shelf-height: 130px;
   }
 }
 @media (max-width: 800px) {
   :root {
     --album-size: 160px;
     --gap: 16px;
+    --shelf-record-width: 80px;
+    --shelf-height: 110px;
   }
 }
 @media (max-width: 500px) {
   :root {
     --album-size: calc(50vw - 24px);
     --gap: 12px;
+    --shelf-record-width: 70px;
+    --shelf-height: 95px;
   }
 }
 
@@ -67,6 +88,8 @@
   :root {
     --album-size: 320px;
     --gap: 40px;
+    --shelf-record-width: 140px;
+    --shelf-height: 180px;
   }
 }
 
@@ -78,6 +101,7 @@
 
 html {
   scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
@@ -85,9 +109,12 @@ body {
   background: var(--bg);
   color: var(--text);
   min-height: 100vh;
+  min-height: 100dvh;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+  padding-top: var(--safe-area-top);
+  padding-bottom: var(--safe-area-bottom);
 }
 
 /* Subtle texture overlay */
@@ -185,7 +212,7 @@ body::before {
 }
 
 /* ============================================
-   HEADER
+   HEADER - IMPROVED STICKY MOBILE
    ============================================ */
 
 .header {
@@ -194,11 +221,19 @@ body::before {
   left: 0;
   right: 0;
   z-index: 100;
-  padding: 24px 40px;
+  padding: 16px 24px;
+  padding-top: calc(16px + var(--safe-area-top));
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: linear-gradient(to bottom, var(--bg) 0%, transparent 100%);
+  background: linear-gradient(to bottom, 
+    var(--bg) 0%, 
+    rgba(13, 12, 10, 0.95) 60%,
+    rgba(13, 12, 10, 0.8) 80%,
+    transparent 100%
+  );
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   pointer-events: none;
 }
 
@@ -208,26 +243,69 @@ body::before {
 
 .logo {
   font-family: "Syne", system-ui, sans-serif;
-  font-size: 26px;
+  font-size: clamp(18px, 4vw, 26px);
   font-weight: 700;
   color: var(--accent);
   letter-spacing: -0.02em;
   user-select: none;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
-/* Header right container for count + admin link */
+/* Header right container */
 .header-right {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 12px;
 }
 
+/* ============================================
+   VIEW TOGGLE
+   ============================================ */
+
+.view-toggle {
+  display: flex;
+  background: var(--surface);
+  border-radius: 8px;
+  padding: 4px;
+  border: 1px solid var(--border);
+}
+
+.view-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 32px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.2s var(--ease-out);
+}
+
+.view-btn:hover {
+  color: var(--text-muted);
+}
+
+.view-btn.active {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+.view-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Record count */
 .record-count {
-  font-size: 13px;
+  font-size: 12px;
   color: var(--text-muted);
   letter-spacing: 0.05em;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .record-count span {
@@ -238,15 +316,24 @@ body::before {
 /* Admin link */
 .admin-link {
   display: none;
-  font-size: 13px;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
   color: var(--text-dim);
   text-decoration: none;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  padding: 6px 12px;
+  padding: 6px 10px;
   border: 1px solid var(--border);
   border-radius: var(--radius);
   transition: all 0.2s var(--ease-out);
+  white-space: nowrap;
+}
+
+.admin-link svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
 }
 
 .admin-link:hover {
@@ -255,8 +342,14 @@ body::before {
   background: var(--accent-glow);
 }
 
-.admin-link.visible {
-  display: inline-block;
+/* Hide admin text on very small screens */
+@media (max-width: 400px) {
+  .admin-link-text {
+    display: none;
+  }
+  .admin-link {
+    padding: 6px;
+  }
 }
 
 /* ============================================
@@ -264,20 +357,24 @@ body::before {
    ============================================ */
 
 .collection {
-  padding: 120px 40px 80px;
+  padding: 100px 24px 60px;
+  padding-top: calc(100px + var(--safe-area-top));
+  padding-bottom: calc(60px + var(--safe-area-bottom));
   max-width: 1800px;
   margin: 0 auto;
 }
 
 @media (max-width: 600px) {
   .collection {
-    padding: 100px 16px 60px;
+    padding: 90px 12px 40px;
+    padding-top: calc(90px + var(--safe-area-top));
   }
   .header {
-    padding: 20px 16px;
+    padding: 12px 12px;
+    padding-top: calc(12px + var(--safe-area-top));
   }
   .header-right {
-    gap: 12px;
+    gap: 8px;
   }
 }
 
@@ -288,6 +385,15 @@ body::before {
     minmax(calc(var(--album-size) * 1.45), 1fr)
   );
   gap: var(--gap);
+  transition: opacity 0.2s var(--ease-out), transform 0.2s var(--ease-out);
+}
+
+/* Mobile grid - 2 columns max */
+@media (max-width: 600px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--gap);
+  }
 }
 
 /* ============================================
@@ -296,10 +402,49 @@ body::before {
 
 .album {
   position: relative;
-  aspect-ratio: 1.45 / 1; /* Extra space on right for vinyl */
+  aspect-ratio: 1.45 / 1;
   cursor: pointer;
   transform-style: preserve-3d;
   perspective: 1000px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Mobile: Square cards without vinyl peeking */
+@media (max-width: 600px) {
+  .album {
+    aspect-ratio: 1 / 1.15;
+  }
+  
+  .album-cover {
+    width: 100% !important;
+  }
+  
+  .vinyl-disc,
+  .vinyl-glow {
+    display: none;
+  }
+  
+  .album-year {
+    right: 8px !important;
+    top: 8px !important;
+    opacity: 1;
+  }
+  
+  .album-info {
+    width: 100% !important;
+    opacity: 1;
+    transform: none;
+    background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.7) 70%, transparent 100%);
+    padding: 12px 10px;
+  }
+  
+  .album-title {
+    font-size: 12px !important;
+  }
+  
+  .album-artist {
+    font-size: 10px !important;
+  }
 }
 
 .album:hover {
@@ -317,12 +462,23 @@ body::before {
   transform: scale(1.02) translateY(-4px);
 }
 
+/* Touch devices - no hover scale */
+@media (hover: none) {
+  .album:hover .album-inner {
+    transform: none;
+  }
+  
+  .album:active .album-inner {
+    transform: scale(0.98);
+  }
+}
+
 /* Cover artwork */
 .album-cover {
   position: absolute;
   left: 0;
   top: 0;
-  width: 69%; /* Square cover takes left portion */
+  width: 69%;
   height: 100%;
   border-radius: var(--radius);
   overflow: hidden;
@@ -344,11 +500,17 @@ body::before {
   transform: scale(1.05);
 }
 
+@media (hover: none) {
+  .album:hover .album-cover img {
+    transform: none;
+  }
+}
+
 /* Vinyl disc - always visible beside cover */
 .vinyl-disc {
   position: absolute;
   top: 50%;
-  left: 34.5%; /* Starts peeking from behind cover */
+  left: 34.5%;
   width: 64%;
   height: 93%;
   border-radius: 50%;
@@ -364,7 +526,7 @@ body::before {
   overflow: hidden;
 }
 
-/* Center label - now a real element for text */
+/* Center label */
 .vinyl-label {
   position: absolute;
   top: 50%;
@@ -463,7 +625,7 @@ body::before {
    VINYL STYLES
    ============================================ */
 
-/* Classic vinyl - uses --vinyl-color, defaults to black */
+/* Classic vinyl */
 .vinyl-classic {
   background: radial-gradient(
     circle at center,
@@ -474,7 +636,6 @@ body::before {
   );
 }
 
-/* Add sheen/reflection effect for colored classic vinyl */
 .vinyl-classic::after {
   content: "";
   position: absolute;
@@ -496,7 +657,7 @@ body::before {
   z-index: 5;
 }
 
-/* Translucent / See-through */
+/* Translucent */
 .vinyl-translucent {
   background: radial-gradient(
     circle at center,
@@ -681,6 +842,166 @@ body::before {
 }
 
 /* ============================================
+   SHELF VIEW
+   ============================================ */
+
+.grid.shelf-view {
+  display: block;
+}
+
+.shelf-container {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.vinyl-shelf {
+  position: relative;
+}
+
+.shelf-records {
+  display: flex;
+  gap: 4px;
+  padding: 0 16px 20px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.shelf-records::-webkit-scrollbar {
+  display: none;
+}
+
+.shelf-record {
+  flex-shrink: 0;
+  width: var(--shelf-record-width);
+  height: var(--shelf-height);
+  cursor: pointer;
+  transform: rotate(var(--tilt, 0deg));
+  transform-origin: bottom center;
+  transition: transform 0.3s var(--ease-spring), z-index 0s;
+  scroll-snap-align: start;
+  animation: shelfFadeIn 0.5s var(--ease-out) backwards;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@keyframes shelfFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) rotate(var(--tilt, 0deg));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) rotate(var(--tilt, 0deg));
+  }
+}
+
+.shelf-record:hover {
+  transform: translateY(-15px) rotate(0deg) scale(1.05);
+  z-index: 10;
+}
+
+.shelf-record.touching {
+  transform: translateY(-10px) rotate(0deg) scale(1.02);
+}
+
+@media (hover: none) {
+  .shelf-record:hover {
+    transform: rotate(var(--tilt, 0deg));
+  }
+  
+  .shelf-record:active {
+    transform: translateY(-5px) scale(0.98);
+  }
+}
+
+.shelf-record-inner {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  border-radius: 2px;
+  overflow: hidden;
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.3),
+    0 8px 20px rgba(0, 0, 0, 0.2),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.shelf-record-inner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Spine effect */
+.shelf-record-spine {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 8px;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.4) 0%,
+    rgba(0, 0, 0, 0.1) 50%,
+    transparent 100%
+  );
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 4px 2px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.spine-artist,
+.spine-title {
+  font-size: 6px;
+  color: transparent;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Shelf base - wooden shelf effect */
+.shelf-base {
+  height: 12px;
+  background: linear-gradient(
+    180deg,
+    #2a2320 0%,
+    #1a1614 20%,
+    #0f0d0c 100%
+  );
+  border-radius: 0 0 4px 4px;
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  margin: 0 8px;
+  position: relative;
+}
+
+.shelf-base::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(201, 166, 107, 0.15) 20%,
+    rgba(201, 166, 107, 0.2) 50%,
+    rgba(201, 166, 107, 0.15) 80%,
+    transparent 100%
+  );
+}
+
+/* ============================================
    NOW PLAYING MODAL
    ============================================ */
 
@@ -689,6 +1010,7 @@ body::before {
   inset: 0;
   background: rgba(0, 0, 0, 0.92);
   backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   z-index: 200;
   display: flex;
   align-items: center;
@@ -699,7 +1021,10 @@ body::before {
     opacity 0.4s var(--ease-out),
     visibility 0.4s;
   cursor: pointer;
-  padding: 40px;
+  padding: 20px;
+  padding-top: calc(20px + var(--safe-area-top));
+  padding-bottom: calc(20px + var(--safe-area-bottom));
+  overflow-y: auto;
 }
 
 .now-playing-overlay.active {
@@ -711,22 +1036,23 @@ body::before {
   display: grid;
   grid-template-columns: auto 1fr;
   grid-template-rows: auto auto;
-  gap: 32px;
-  max-width: 1200px;
+  gap: 24px;
+  max-width: 1000px;
   max-height: 90vh;
   transform: scale(0.95) translateY(20px);
   transition: transform 0.5s var(--ease-spring);
+  cursor: default;
 }
 
 .now-playing-overlay.active .now-playing {
   transform: scale(1) translateY(0);
 }
 
-/* Album art - always prominently displayed */
+/* Album art */
 .now-playing-cover {
   grid-row: 1 / 3;
-  width: min(55vh, 50vw, 500px);
-  min-width: 280px;
+  width: min(45vh, 45vw, 400px);
+  min-width: 200px;
   aspect-ratio: 1;
   border-radius: 6px;
   overflow: hidden;
@@ -742,7 +1068,7 @@ body::before {
   object-fit: cover;
 }
 
-/* Details section - beside the cover */
+/* Details section */
 .now-playing-details {
   text-align: left;
   align-self: end;
@@ -751,8 +1077,8 @@ body::before {
 
 .now-playing-title {
   font-family: "Syne", system-ui, sans-serif;
-  font-size: clamp(24px, 3vw, 38px);
-  margin-bottom: 8px;
+  font-size: clamp(20px, 3vw, 34px);
+  margin-bottom: 6px;
   font-weight: 700;
   line-height: 1.1;
 }
@@ -762,41 +1088,43 @@ body::before {
   color: var(--text-muted);
 }
 
-/* Tracklist - beside the cover, below details */
+/* Tracklist */
 .now-playing-tracklist {
   align-self: start;
-  max-height: 300px;
+  max-height: 250px;
   overflow-y: auto;
 }
 
 /* Escape hint */
 .escape-hint {
   position: absolute;
-  bottom: 24px;
+  bottom: 16px;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-dim);
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
-/* Mobile: stack vertically but keep cover large */
-@media (max-width: 900px) {
+/* Mobile: stack vertically */
+@media (max-width: 768px) {
   .now-playing {
     grid-template-columns: 1fr;
     grid-template-rows: auto auto auto;
     justify-items: center;
     max-height: none;
     overflow-y: auto;
-    padding: 20px;
-    padding-bottom: 60px;
+    padding: 16px;
+    padding-bottom: 50px;
+    gap: 16px;
   }
   
   .now-playing-cover {
     grid-row: auto;
-    width: min(80vw, 80vh, 400px);
-    min-width: 200px;
+    width: min(75vw, 300px);
+    min-width: 180px;
   }
   
   .now-playing-details {
@@ -808,7 +1136,12 @@ body::before {
   .now-playing-tracklist {
     max-height: none;
     width: 100%;
-    max-width: 500px;
+    max-width: 400px;
+  }
+  
+  .escape-hint {
+    bottom: 12px;
+    font-size: 10px;
   }
 }
 
@@ -819,20 +1152,20 @@ body::before {
 .empty-state {
   grid-column: 1 / -1;
   text-align: center;
-  padding: 80px 20px;
+  padding: 60px 20px;
   color: var(--text-muted);
 }
 
 .empty-state h2 {
   font-family: "Syne", system-ui, sans-serif;
-  font-size: 32px;
+  font-size: clamp(24px, 5vw, 32px);
   font-weight: 700;
   color: var(--text);
   margin-bottom: 12px;
 }
 
 .empty-state p {
-  font-size: 15px;
+  font-size: 14px;
   max-width: 400px;
   margin: 0 auto;
   line-height: 1.6;
@@ -849,7 +1182,6 @@ body::before {
   color: var(--accent);
 }
 
-/* Empty state link button */
 .empty-state-link {
   display: inline-block;
   margin-top: 20px;
@@ -889,45 +1221,19 @@ body::before {
 }
 
 /* Stagger album animations */
-.album:nth-child(1) {
-  animation-delay: 0s;
-}
-.album:nth-child(2) {
-  animation-delay: 0.05s;
-}
-.album:nth-child(3) {
-  animation-delay: 0.1s;
-}
-.album:nth-child(4) {
-  animation-delay: 0.15s;
-}
-.album:nth-child(5) {
-  animation-delay: 0.2s;
-}
-.album:nth-child(6) {
-  animation-delay: 0.25s;
-}
-.album:nth-child(7) {
-  animation-delay: 0.3s;
-}
-.album:nth-child(8) {
-  animation-delay: 0.35s;
-}
-.album:nth-child(9) {
-  animation-delay: 0.4s;
-}
-.album:nth-child(10) {
-  animation-delay: 0.45s;
-}
-.album:nth-child(11) {
-  animation-delay: 0.5s;
-}
-.album:nth-child(12) {
-  animation-delay: 0.55s;
-}
-.album:nth-child(n + 13) {
-  animation-delay: 0.6s;
-}
+.album:nth-child(1) { animation-delay: 0s; }
+.album:nth-child(2) { animation-delay: 0.05s; }
+.album:nth-child(3) { animation-delay: 0.1s; }
+.album:nth-child(4) { animation-delay: 0.15s; }
+.album:nth-child(5) { animation-delay: 0.2s; }
+.album:nth-child(6) { animation-delay: 0.25s; }
+.album:nth-child(7) { animation-delay: 0.3s; }
+.album:nth-child(8) { animation-delay: 0.35s; }
+.album:nth-child(9) { animation-delay: 0.4s; }
+.album:nth-child(10) { animation-delay: 0.45s; }
+.album:nth-child(11) { animation-delay: 0.5s; }
+.album:nth-child(12) { animation-delay: 0.55s; }
+.album:nth-child(n + 13) { animation-delay: 0.6s; }
 
 /* ============================================
    SCROLLBAR
@@ -935,6 +1241,7 @@ body::before {
 
 ::-webkit-scrollbar {
   width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -982,6 +1289,16 @@ body::before {
   opacity: 1;
 }
 
+@media (max-width: 600px) {
+  .album-rating {
+    top: 8px;
+    left: 8px;
+    font-size: 9px;
+    padding: 3px 5px;
+    opacity: 1;
+  }
+}
+
 /* ============================================
    NOW PLAYING — ENHANCED
    ============================================ */
@@ -994,7 +1311,7 @@ body::before {
 }
 
 .now-playing-rating .star {
-  font-size: 20px;
+  font-size: 18px;
   color: var(--text-dim);
 }
 
@@ -1002,9 +1319,9 @@ body::before {
   color: var(--accent);
 }
 
-/* Meta info (year + genre) */
+/* Meta info */
 .now-playing-meta {
-  font-size: 14px;
+  font-size: 13px;
   color: var(--text-dim);
   margin-top: 8px;
 }
@@ -1017,18 +1334,18 @@ body::before {
 /* External links */
 .now-playing-links {
   display: flex;
-  gap: 12px;
-  margin-top: 20px;
+  gap: 10px;
+  margin-top: 16px;
   flex-wrap: wrap;
 }
 
 .link-button {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 18px;
-  border-radius: 24px;
-  font-size: 13px;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-size: 12px;
   font-weight: 500;
   text-decoration: none;
   transition: all 0.2s var(--ease-out);
@@ -1036,8 +1353,8 @@ body::before {
 }
 
 .link-button svg {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
 }
 
 .link-apple {
@@ -1061,28 +1378,28 @@ body::before {
   transform: translateY(-2px);
 }
 
-/* Tracklist - updated for side layout */
+/* Tracklist */
 .tracklist-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
 }
 
 .tracklist-side {
   background: var(--surface);
   border-radius: 8px;
-  padding: 16px;
+  padding: 14px;
   border: 1px solid var(--border);
 }
 
 .side-label {
   font-family: "Syne", system-ui, sans-serif;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 600;
   color: var(--accent);
   text-transform: uppercase;
   letter-spacing: 0.15em;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   padding-bottom: 6px;
   border-bottom: 1px solid var(--border);
 }
@@ -1094,13 +1411,13 @@ body::before {
 
 .track-list li {
   counter-increment: track;
-  padding: 8px 0;
-  font-size: 14px;
+  padding: 6px 0;
+  font-size: 13px;
   color: var(--text-muted);
   border-bottom: 1px solid var(--border);
   display: flex;
   align-items: baseline;
-  gap: 12px;
+  gap: 10px;
 }
 
 .track-list li:last-child {
@@ -1109,18 +1426,17 @@ body::before {
 
 .track-list li::before {
   content: counter(track);
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 500;
   color: var(--text-dim);
-  min-width: 16px;
+  min-width: 14px;
 }
 
-/* Additional mobile adjustments for now playing */
+/* Mobile adjustments for now playing */
 @media (max-width: 600px) {
   .now-playing-links {
     flex-direction: column;
     width: 100%;
-    justify-content: center;
   }
 
   .link-button {
@@ -1130,5 +1446,9 @@ body::before {
 
   .tracklist-container {
     grid-template-columns: 1fr;
+  }
+  
+  .now-playing-rating {
+    justify-content: center;
   }
 }
