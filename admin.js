@@ -11,95 +11,95 @@ import {
   addVinyl,
   updateVinyl,
   deleteVinyl,
-  importCollection
-} from './js/firebase-config.js';
+  importCollection,
+} from "./js/firebase-config.js";
 
 // ============================================
 // DOM ELEMENTS
 // ============================================
 
-const authGate = document.getElementById('authGate');
-const adminContainer = document.getElementById('adminContainer');
-const googleSignInBtn = document.getElementById('googleSignInBtn');
-const signOutBtn = document.getElementById('signOutBtn');
-const userAvatar = document.getElementById('userAvatar');
-const userName = document.getElementById('userName');
+const authGate = document.getElementById("authGate");
+const adminContainer = document.getElementById("adminContainer");
+const googleSignInBtn = document.getElementById("googleSignInBtn");
+const signOutBtn = document.getElementById("signOutBtn");
+const userAvatar = document.getElementById("userAvatar");
+const userName = document.getElementById("userName");
 
 // Views
-const listView = document.getElementById('listView');
-const formView = document.getElementById('formView');
-const importView = document.getElementById('importView');
-const navItems = document.querySelectorAll('.nav-item');
+const listView = document.getElementById("listView");
+const formView = document.getElementById("formView");
+const importView = document.getElementById("importView");
+const navItems = document.querySelectorAll(".nav-item");
 
 // List View
-const recordsGrid = document.getElementById('recordsGrid');
-const searchInput = document.getElementById('searchInput');
-const filterGenre = document.getElementById('filterGenre');
-const sortBy = document.getElementById('sortBy');
+const recordsGrid = document.getElementById("recordsGrid");
+const searchInput = document.getElementById("searchInput");
+const filterGenre = document.getElementById("filterGenre");
+const sortBy = document.getElementById("sortBy");
 
 // Form View
-const vinylForm = document.getElementById('vinylForm');
-const formTitle = document.getElementById('formTitle');
-const vinylIdInput = document.getElementById('vinylId');
-const cancelBtn = document.getElementById('cancelBtn');
-const cancelFormBtn = document.getElementById('cancelFormBtn');
-const submitBtn = document.getElementById('submitBtn');
+const vinylForm = document.getElementById("vinylForm");
+const formTitle = document.getElementById("formTitle");
+const vinylIdInput = document.getElementById("vinylId");
+const cancelBtn = document.getElementById("cancelBtn");
+const cancelFormBtn = document.getElementById("cancelFormBtn");
+const submitBtn = document.getElementById("submitBtn");
 
 // Form Fields
-const artistInput = document.getElementById('artist');
-const albumInput = document.getElementById('album');
-const yearInput = document.getElementById('year');
-const genreInput = document.getElementById('genre');
-const ratingInput = document.getElementById('rating');
-const coverInput = document.getElementById('cover');
-const coverPreviewImg = document.getElementById('coverPreviewImg');
-const coverPreview = document.getElementById('coverPreview');
+const artistInput = document.getElementById("artist");
+const albumInput = document.getElementById("album");
+const yearInput = document.getElementById("year");
+const genreInput = document.getElementById("genre");
+const ratingInput = document.getElementById("rating");
+const coverInput = document.getElementById("cover");
+const coverPreviewImg = document.getElementById("coverPreviewImg");
+const coverPreview = document.getElementById("coverPreview");
 
 // Vinyl Customization
-const vinylStyleSelect = document.getElementById('vinylStyle');
-const vinylColorInput = document.getElementById('vinylColor');
-const vinylColorHex = document.getElementById('vinylColorHex');
-const vinylColor2Input = document.getElementById('vinylColor2');
-const vinylColor2Hex = document.getElementById('vinylColor2Hex');
-const labelColorInput = document.getElementById('labelColor');
-const labelColorHex = document.getElementById('labelColorHex');
-const labelTextInput = document.getElementById('labelText');
-const vinylPreview = document.getElementById('vinylPreview');
+const vinylStyleSelect = document.getElementById("vinylStyle");
+const vinylColorInput = document.getElementById("vinylColor");
+const vinylColorHex = document.getElementById("vinylColorHex");
+const vinylColor2Input = document.getElementById("vinylColor2");
+const vinylColor2Hex = document.getElementById("vinylColor2Hex");
+const labelColorInput = document.getElementById("labelColor");
+const labelColorHex = document.getElementById("labelColorHex");
+const labelTextInput = document.getElementById("labelText");
+const vinylPreview = document.getElementById("vinylPreview");
 
 // Links
-const appleMusicInput = document.getElementById('appleMusic');
-const discogsInput = document.getElementById('discogs');
+const appleMusicInput = document.getElementById("appleMusic");
+const discogsInput = document.getElementById("discogs");
 
 // Tracks
-const tracksList = document.getElementById('tracksList');
-const addTrackBtn = document.getElementById('addTrackBtn');
+const tracksList = document.getElementById("tracksList");
+const addTrackBtn = document.getElementById("addTrackBtn");
 
 // Star Rating
-const starRating = document.getElementById('starRating');
-const starButtons = starRating.querySelectorAll('.star');
-const clearRatingBtn = starRating.querySelector('.clear-rating');
+const starRating = document.getElementById("starRating");
+const starButtons = starRating.querySelectorAll(".star");
+const clearRatingBtn = starRating.querySelector(".clear-rating");
 
 // Import
-const importJson = document.getElementById('importJson');
-const validateJsonBtn = document.getElementById('validateJsonBtn');
-const importJsonBtn = document.getElementById('importJsonBtn');
-const importStatus = document.getElementById('importStatus');
+const importJson = document.getElementById("importJson");
+const validateJsonBtn = document.getElementById("validateJsonBtn");
+const importJsonBtn = document.getElementById("importJsonBtn");
+const importStatus = document.getElementById("importStatus");
 
 // Delete Modal
-const deleteModal = document.getElementById('deleteModal');
-const deleteRecordName = document.getElementById('deleteRecordName');
-const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
-const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+const deleteModal = document.getElementById("deleteModal");
+const deleteRecordName = document.getElementById("deleteRecordName");
+const cancelDeleteBtn = document.getElementById("cancelDeleteBtn");
+const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
 
 // Discogs Auto-fill
-const discogsFetchBtn = document.getElementById('discogsFetchBtn');
-const discogsModal = document.getElementById('discogsModal');
-const discogsResults = document.getElementById('discogsResults');
-const cancelDiscogsBtn = document.getElementById('cancelDiscogsBtn');
-const labelInput = document.getElementById('label');
+const discogsFetchBtn = document.getElementById("discogsFetchBtn");
+const discogsModal = document.getElementById("discogsModal");
+const discogsResults = document.getElementById("discogsResults");
+const cancelDiscogsBtn = document.getElementById("cancelDiscogsBtn");
+const labelInput = document.getElementById("label");
 
 // Toast
-const toastContainer = document.getElementById('toastContainer');
+const toastContainer = document.getElementById("toastContainer");
 
 // ============================================
 // STATE
@@ -113,7 +113,7 @@ let deleteTargetId = null;
 
 // Discogs API Configuration
 // Replace with your personal Discogs token from https://www.discogs.com/settings/developers
-const DISCOGS_TOKEN = 'YOUR_DISCOGS_TOKEN';
+const DISCOGS_TOKEN = "YOUR_DISCOGS_TOKEN";
 
 // ============================================
 // AUTH HANDLERS
@@ -121,16 +121,16 @@ const DISCOGS_TOKEN = 'YOUR_DISCOGS_TOKEN';
 
 onAuthChange((user) => {
   currentUser = user;
-  
+
   if (user) {
     // Show admin interface
-    authGate.style.display = 'none';
-    adminContainer.style.display = 'flex';
-    
+    authGate.style.display = "none";
+    adminContainer.style.display = "flex";
+
     // Update user info
-    userAvatar.src = user.photoURL || '';
+    userAvatar.src = user.photoURL || "";
     userName.textContent = user.displayName || user.email;
-    
+
     // Subscribe to data
     if (!unsubscribe) {
       unsubscribe = subscribeToVinyls((records) => {
@@ -141,9 +141,9 @@ onAuthChange((user) => {
     }
   } else {
     // Show auth gate
-    authGate.style.display = 'flex';
-    adminContainer.style.display = 'none';
-    
+    authGate.style.display = "flex";
+    adminContainer.style.display = "none";
+
     // Cleanup subscription
     if (unsubscribe) {
       unsubscribe();
@@ -152,7 +152,7 @@ onAuthChange((user) => {
   }
 });
 
-googleSignInBtn.addEventListener('click', async () => {
+googleSignInBtn.addEventListener("click", async () => {
   googleSignInBtn.disabled = true;
   googleSignInBtn.innerHTML = `
     <svg class="spinner" viewBox="0 0 24 24" width="20" height="20">
@@ -160,11 +160,11 @@ googleSignInBtn.addEventListener('click', async () => {
     </svg>
     Signing in...
   `;
-  
+
   const result = await signInWithGoogle();
-  
+
   if (!result.success) {
-    showToast('Sign in failed: ' + result.error, 'error');
+    showToast("Sign in failed: " + result.error, "error");
     googleSignInBtn.disabled = false;
     googleSignInBtn.innerHTML = `
       <svg viewBox="0 0 24 24" width="20" height="20">
@@ -178,17 +178,17 @@ googleSignInBtn.addEventListener('click', async () => {
   }
 });
 
-signOutBtn.addEventListener('click', async () => {
+signOutBtn.addEventListener("click", async () => {
   await logOut();
-  showToast('Signed out successfully', 'success');
+  showToast("Signed out successfully", "success");
 });
 
 // ============================================
 // NAVIGATION
 // ============================================
 
-navItems.forEach(item => {
-  item.addEventListener('click', () => {
+navItems.forEach((item) => {
+  item.addEventListener("click", () => {
     const view = item.dataset.view;
     switchView(view);
   });
@@ -196,63 +196,68 @@ navItems.forEach(item => {
 
 function switchView(view) {
   // Update nav
-  navItems.forEach(item => {
-    item.classList.toggle('active', item.dataset.view === view);
+  navItems.forEach((item) => {
+    item.classList.toggle("active", item.dataset.view === view);
   });
-  
+
   // Show/hide views
-  listView.style.display = view === 'list' ? 'block' : 'none';
-  formView.style.display = view === 'add' || view === 'edit' ? 'block' : 'none';
-  importView.style.display = view === 'import' ? 'block' : 'none';
-  
+  listView.style.display = view === "list" ? "block" : "none";
+  formView.style.display = view === "add" || view === "edit" ? "block" : "none";
+  importView.style.display = view === "import" ? "block" : "none";
+
   // Reset form when switching to add
-  if (view === 'add') {
+  if (view === "add") {
     resetForm();
-    formTitle.textContent = 'Add New Record';
+    formTitle.textContent = "Add New Record";
   }
 }
 
-cancelBtn.addEventListener('click', () => switchView('list'));
-cancelFormBtn.addEventListener('click', () => switchView('list'));
+cancelBtn.addEventListener("click", () => switchView("list"));
+cancelFormBtn.addEventListener("click", () => switchView("list"));
 
 // ============================================
 // RECORDS LIST
 // ============================================
 
 function updateGenreFilter() {
-  const genres = [...new Set(allRecords.map(r => r.genre).filter(Boolean))].sort();
-  filterGenre.innerHTML = '<option value="">All Genres</option>' +
-    genres.map(g => `<option value="${g}">${g}</option>`).join('');
+  const genres = [
+    ...new Set(allRecords.map((r) => r.genre).filter(Boolean)),
+  ].sort();
+  filterGenre.innerHTML =
+    '<option value="">All Genres</option>' +
+    genres.map((g) => `<option value="${g}">${g}</option>`).join("");
 }
 
 function renderRecords() {
   let records = [...allRecords];
-  
+
   // Search filter
   const search = searchInput.value.toLowerCase().trim();
   if (search) {
-    records = records.filter(r => 
-      r.artist.toLowerCase().includes(search) ||
-      r.album.toLowerCase().includes(search)
+    records = records.filter(
+      (r) =>
+        r.artist.toLowerCase().includes(search) ||
+        r.album.toLowerCase().includes(search),
     );
   }
-  
+
   // Genre filter
   const genre = filterGenre.value;
   if (genre) {
-    records = records.filter(r => r.genre === genre);
+    records = records.filter((r) => r.genre === genre);
   }
-  
+
   // Sort
   const sort = sortBy.value;
   records.sort((a, b) => {
-    if (sort === 'artist') return (a.artist || '').localeCompare(b.artist || '');
-    if (sort === 'album') return (a.album || '').localeCompare(b.album || '');
-    if (sort === 'year') return (b.year || 0) - (a.year || 0);
-    if (sort === 'rating') return (b.rating || 0) - (a.rating || 0);
+    if (sort === "artist")
+      return (a.artist || "").localeCompare(b.artist || "");
+    if (sort === "album") return (a.album || "").localeCompare(b.album || "");
+    if (sort === "year") return (b.year || 0) - (a.year || 0);
+    if (sort === "rating") return (b.rating || 0) - (a.rating || 0);
     return 0;
   });
-  
+
   if (records.length === 0) {
     recordsGrid.innerHTML = `
       <div class="empty-records">
@@ -261,13 +266,15 @@ function renderRecords() {
           <circle cx="12" cy="12" r="6"/>
           <circle cx="12" cy="12" r="2"/>
         </svg>
-        <p>${search || genre ? 'No records match your filters' : 'No records yet. Add your first one!'}</p>
+        <p>${search || genre ? "No records match your filters" : "No records yet. Add your first one!"}</p>
       </div>
     `;
     return;
   }
-  
-  recordsGrid.innerHTML = records.map(record => `
+
+  recordsGrid.innerHTML = records
+    .map(
+      (record) => `
     <div class="record-card" data-id="${record.id}">
       <div class="record-cover">
         <img src="${record.cover}" alt="${record.album}" loading="lazy">
@@ -291,23 +298,25 @@ function renderRecords() {
         <p class="record-artist">${record.artist}</p>
         <div class="record-meta">
           <span>${record.year}</span>
-          ${record.genre ? `<span class="record-genre">${record.genre}</span>` : ''}
-          ${record.rating ? `<span class="record-rating">${'★'.repeat(record.rating)}</span>` : ''}
+          ${record.genre ? `<span class="record-genre">${record.genre}</span>` : ""}
+          ${record.rating ? `<span class="record-rating">${"★".repeat(record.rating)}</span>` : ""}
         </div>
       </div>
     </div>
-  `).join('');
-  
+  `,
+    )
+    .join("");
+
   // Add event listeners
-  recordsGrid.querySelectorAll('.edit-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
+  recordsGrid.querySelectorAll(".edit-btn").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
       e.stopPropagation();
       editRecord(btn.dataset.id);
     });
   });
-  
-  recordsGrid.querySelectorAll('.delete-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
+
+  recordsGrid.querySelectorAll(".delete-btn").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
       e.stopPropagation();
       showDeleteModal(btn.dataset.id, btn.dataset.name);
     });
@@ -315,9 +324,9 @@ function renderRecords() {
 }
 
 // Filter/search listeners
-searchInput.addEventListener('input', renderRecords);
-filterGenre.addEventListener('change', renderRecords);
-sortBy.addEventListener('change', renderRecords);
+searchInput.addEventListener("input", renderRecords);
+filterGenre.addEventListener("change", renderRecords);
+sortBy.addEventListener("change", renderRecords);
 
 // ============================================
 // FORM HANDLING
@@ -325,76 +334,76 @@ sortBy.addEventListener('change', renderRecords);
 
 function resetForm() {
   vinylForm.reset();
-  vinylIdInput.value = '';
+  vinylIdInput.value = "";
   currentTracks = [];
   renderTracks();
   updateStarRating(0);
-  updateCoverPreview('');
+  updateCoverPreview("");
   updateVinylPreview();
-  
+
   // Reset color inputs
-  vinylColorInput.value = '#1a1a1a';
-  vinylColorHex.value = '#1a1a1a';
-  vinylColor2Input.value = '#0a0a0a';
-  vinylColor2Hex.value = '#0a0a0a';
-  labelColorInput.value = '#1a1a1a';
-  labelColorHex.value = '#1a1a1a';
+  vinylColorInput.value = "#1a1a1a";
+  vinylColorHex.value = "#1a1a1a";
+  vinylColor2Input.value = "#0a0a0a";
+  vinylColor2Hex.value = "#0a0a0a";
+  labelColorInput.value = "#1a1a1a";
+  labelColorHex.value = "#1a1a1a";
 }
 
 function editRecord(id) {
-  const record = allRecords.find(r => r.id === id);
+  const record = allRecords.find((r) => r.id === id);
   if (!record) return;
-  
-  formTitle.textContent = 'Edit Record';
-  switchView('edit');
-  
+
+  formTitle.textContent = "Edit Record";
+  switchView("edit");
+
   // Fill form
   vinylIdInput.value = record.id;
-  artistInput.value = record.artist || '';
-  albumInput.value = record.album || '';
-  yearInput.value = record.year || '';
-  genreInput.value = record.genre || '';
-  coverInput.value = record.cover || '';
+  artistInput.value = record.artist || "";
+  albumInput.value = record.album || "";
+  yearInput.value = record.year || "";
+  genreInput.value = record.genre || "";
+  coverInput.value = record.cover || "";
   updateCoverPreview(record.cover);
   updateStarRating(record.rating || 0);
-  
+
   // Vinyl customization
   const vinyl = record.vinyl || {};
-  vinylStyleSelect.value = vinyl.style || 'classic';
-  vinylColorInput.value = vinyl.color || '#1a1a1a';
-  vinylColorHex.value = vinyl.color || '#1a1a1a';
-  vinylColor2Input.value = vinyl.color2 || '#0a0a0a';
-  vinylColor2Hex.value = vinyl.color2 || '#0a0a0a';
-  labelColorInput.value = vinyl.labelColor || '#1a1a1a';
-  labelColorHex.value = vinyl.labelColor || '#1a1a1a';
-  labelTextInput.value = vinyl.labelText || '';
+  vinylStyleSelect.value = vinyl.style || "classic";
+  vinylColorInput.value = vinyl.color || "#1a1a1a";
+  vinylColorHex.value = vinyl.color || "#1a1a1a";
+  vinylColor2Input.value = vinyl.color2 || "#0a0a0a";
+  vinylColor2Hex.value = vinyl.color2 || "#0a0a0a";
+  labelColorInput.value = vinyl.labelColor || "#1a1a1a";
+  labelColorHex.value = vinyl.labelColor || "#1a1a1a";
+  labelTextInput.value = vinyl.labelText || "";
   updateVinylPreview();
-  
+
   // Links
   const links = record.links || {};
-  appleMusicInput.value = links.appleMusic || '';
-  discogsInput.value = links.discogs || '';
-  
+  appleMusicInput.value = links.appleMusic || "";
+  discogsInput.value = links.discogs || "";
+
   // Tracks
   currentTracks = (record.tracks || []).map((t, i) => ({
     id: Date.now() + i,
-    side: t.side || 'A',
-    title: t.title || ''
+    side: t.side || "A",
+    title: t.title || "",
   }));
   renderTracks();
 }
 
 // Form submission
-vinylForm.addEventListener('submit', async (e) => {
+vinylForm.addEventListener("submit", async (e) => {
   e.preventDefault();
-  
+
   const isEdit = !!vinylIdInput.value;
-  
+
   // Show loading
-  submitBtn.querySelector('.btn-text').style.display = 'none';
-  submitBtn.querySelector('.btn-loading').style.display = 'flex';
+  submitBtn.querySelector(".btn-text").style.display = "none";
+  submitBtn.querySelector(".btn-loading").style.display = "flex";
   submitBtn.disabled = true;
-  
+
   // Build data object
   const vinylData = {
     artist: artistInput.value.trim(),
@@ -408,36 +417,38 @@ vinylForm.addEventListener('submit', async (e) => {
       color2: vinylColor2Input.value,
       style: vinylStyleSelect.value,
       labelColor: labelColorInput.value,
-      labelText: labelTextInput.value.trim() || 'auto'
+      labelText: labelTextInput.value.trim() || "auto",
     },
     links: {
       appleMusic: appleMusicInput.value.trim() || null,
-      discogs: discogsInput.value.trim() || null
+      discogs: discogsInput.value.trim() || null,
     },
-    tracks: currentTracks.map(t => ({
-      side: t.side,
-      title: t.title
-    })).filter(t => t.title.trim())
+    tracks: currentTracks
+      .map((t) => ({
+        side: t.side,
+        title: t.title,
+      }))
+      .filter((t) => t.title.trim()),
   };
-  
+
   let result;
   if (isEdit) {
     result = await updateVinyl(vinylIdInput.value, vinylData);
   } else {
     result = await addVinyl(vinylData);
   }
-  
+
   // Reset button
-  submitBtn.querySelector('.btn-text').style.display = 'inline';
-  submitBtn.querySelector('.btn-loading').style.display = 'none';
+  submitBtn.querySelector(".btn-text").style.display = "inline";
+  submitBtn.querySelector(".btn-loading").style.display = "none";
   submitBtn.disabled = false;
-  
+
   if (result.success) {
-    showToast(isEdit ? 'Record updated!' : 'Record added!', 'success');
-    switchView('list');
+    showToast(isEdit ? "Record updated!" : "Record added!", "success");
+    switchView("list");
     resetForm();
   } else {
-    showToast('Error: ' + result.error, 'error');
+    showToast("Error: " + result.error, "error");
   }
 });
 
@@ -448,28 +459,28 @@ vinylForm.addEventListener('submit', async (e) => {
 function updateStarRating(value) {
   ratingInput.value = value;
   starButtons.forEach((star, index) => {
-    star.classList.toggle('active', index < value);
+    star.classList.toggle("active", index < value);
   });
 }
 
-starButtons.forEach(star => {
-  star.addEventListener('click', () => {
+starButtons.forEach((star) => {
+  star.addEventListener("click", () => {
     updateStarRating(parseInt(star.dataset.value, 10));
   });
-  
-  star.addEventListener('mouseenter', () => {
+
+  star.addEventListener("mouseenter", () => {
     const value = parseInt(star.dataset.value, 10);
     starButtons.forEach((s, i) => {
-      s.classList.toggle('hover', i < value);
+      s.classList.toggle("hover", i < value);
     });
   });
 });
 
-starRating.addEventListener('mouseleave', () => {
-  starButtons.forEach(s => s.classList.remove('hover'));
+starRating.addEventListener("mouseleave", () => {
+  starButtons.forEach((s) => s.classList.remove("hover"));
 });
 
-clearRatingBtn.addEventListener('click', () => updateStarRating(0));
+clearRatingBtn.addEventListener("click", () => updateStarRating(0));
 
 // ============================================
 // COVER PREVIEW
@@ -478,20 +489,20 @@ clearRatingBtn.addEventListener('click', () => updateStarRating(0));
 function updateCoverPreview(url) {
   if (url) {
     coverPreviewImg.src = url;
-    coverPreview.classList.add('has-image');
+    coverPreview.classList.add("has-image");
   } else {
-    coverPreviewImg.src = '';
-    coverPreview.classList.remove('has-image');
+    coverPreviewImg.src = "";
+    coverPreview.classList.remove("has-image");
   }
 }
 
-coverInput.addEventListener('input', () => {
+coverInput.addEventListener("input", () => {
   updateCoverPreview(coverInput.value);
   updateVinylPreview();
 });
 
-coverPreviewImg.addEventListener('error', () => {
-  coverPreview.classList.remove('has-image');
+coverPreviewImg.addEventListener("error", () => {
+  coverPreview.classList.remove("has-image");
 });
 
 // ============================================
@@ -503,20 +514,20 @@ function updateVinylPreview() {
   const color = vinylColorInput.value;
   const color2 = vinylColor2Input.value;
   const labelColor = labelColorInput.value;
-  const labelText = labelTextInput.value || albumInput.value || 'VINYL';
+  const labelText = labelTextInput.value || albumInput.value || "VINYL";
   const coverUrl = coverInput.value;
-  
-  let extraLayers = '';
-  if (style === 'marble') {
+
+  let extraLayers = "";
+  if (style === "marble") {
     extraLayers = `<div class="marble-swirl"></div>`;
-  } else if (style === 'splatter') {
+  } else if (style === "splatter") {
     extraLayers = `<div class="splatter-layer"></div>`;
-  } else if (style === 'picture') {
+  } else if (style === "picture") {
     extraLayers = `<div class="picture-layer" style="background-image: url('${coverUrl}')"></div>`;
   }
-  
-  const labelTextColor = isLightColor(labelColor) ? '#1a1a1a' : '#ffffff';
-  
+
+  const labelTextColor = isLightColor(labelColor) ? "#1a1a1a" : "#ffffff";
+
   vinylPreview.innerHTML = `
     <div class="vinyl-disc vinyl-${style}" 
          style="--vinyl-color: ${color}; --vinyl-color2: ${color2};">
@@ -531,7 +542,7 @@ function updateVinylPreview() {
 
 function isLightColor(hex) {
   if (!hex) return false;
-  const c = hex.replace('#', '');
+  const c = hex.replace("#", "");
   const r = parseInt(c.substr(0, 2), 16);
   const g = parseInt(c.substr(2, 2), 16);
   const b = parseInt(c.substr(4, 2), 16);
@@ -541,19 +552,19 @@ function isLightColor(hex) {
 
 // Color input sync
 function syncColorInputs(colorInput, hexInput) {
-  colorInput.addEventListener('input', () => {
+  colorInput.addEventListener("input", () => {
     hexInput.value = colorInput.value;
     updateVinylPreview();
   });
-  
-  hexInput.addEventListener('input', () => {
+
+  hexInput.addEventListener("input", () => {
     if (/^#[0-9A-Fa-f]{6}$/.test(hexInput.value)) {
       colorInput.value = hexInput.value;
       updateVinylPreview();
     }
   });
-  
-  hexInput.addEventListener('blur', () => {
+
+  hexInput.addEventListener("blur", () => {
     if (!/^#[0-9A-Fa-f]{6}$/.test(hexInput.value)) {
       hexInput.value = colorInput.value;
     }
@@ -564,9 +575,9 @@ syncColorInputs(vinylColorInput, vinylColorHex);
 syncColorInputs(vinylColor2Input, vinylColor2Hex);
 syncColorInputs(labelColorInput, labelColorHex);
 
-vinylStyleSelect.addEventListener('change', updateVinylPreview);
-labelTextInput.addEventListener('input', updateVinylPreview);
-albumInput.addEventListener('input', updateVinylPreview);
+vinylStyleSelect.addEventListener("change", updateVinylPreview);
+labelTextInput.addEventListener("input", updateVinylPreview);
+albumInput.addEventListener("input", updateVinylPreview);
 
 // Initial preview
 updateVinylPreview();
@@ -584,8 +595,10 @@ function renderTracks() {
     `;
     return;
   }
-  
-  tracksList.innerHTML = currentTracks.map((track, index) => `
+
+  tracksList.innerHTML = currentTracks
+    .map(
+      (track, index) => `
     <div class="track-item" data-id="${track.id}" draggable="true">
       <div class="track-drag-handle">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -595,10 +608,10 @@ function renderTracks() {
         </svg>
       </div>
       <select class="track-side" data-index="${index}">
-        <option value="A" ${track.side === 'A' ? 'selected' : ''}>A</option>
-        <option value="B" ${track.side === 'B' ? 'selected' : ''}>B</option>
-        <option value="C" ${track.side === 'C' ? 'selected' : ''}>C</option>
-        <option value="D" ${track.side === 'D' ? 'selected' : ''}>D</option>
+        <option value="A" ${track.side === "A" ? "selected" : ""}>A</option>
+        <option value="B" ${track.side === "B" ? "selected" : ""}>B</option>
+        <option value="C" ${track.side === "C" ? "selected" : ""}>C</option>
+        <option value="D" ${track.side === "D" ? "selected" : ""}>D</option>
       </select>
       <input type="text" class="track-title" data-index="${index}" 
              value="${track.title}" placeholder="Track title">
@@ -608,52 +621,54 @@ function renderTracks() {
         </svg>
       </button>
     </div>
-  `).join('');
-  
+  `,
+    )
+    .join("");
+
   // Event listeners
-  tracksList.querySelectorAll('.track-side').forEach(select => {
-    select.addEventListener('change', () => {
+  tracksList.querySelectorAll(".track-side").forEach((select) => {
+    select.addEventListener("change", () => {
       const index = parseInt(select.dataset.index, 10);
       currentTracks[index].side = select.value;
     });
   });
-  
-  tracksList.querySelectorAll('.track-title').forEach(input => {
-    input.addEventListener('input', () => {
+
+  tracksList.querySelectorAll(".track-title").forEach((input) => {
+    input.addEventListener("input", () => {
       const index = parseInt(input.dataset.index, 10);
       currentTracks[index].title = input.value;
     });
   });
-  
-  tracksList.querySelectorAll('.remove-track-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
+
+  tracksList.querySelectorAll(".remove-track-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
       const index = parseInt(btn.dataset.index, 10);
       currentTracks.splice(index, 1);
       renderTracks();
     });
   });
-  
+
   // Drag and drop
   initDragAndDrop();
 }
 
-addTrackBtn.addEventListener('click', () => {
+addTrackBtn.addEventListener("click", () => {
   // Determine the next side based on last track
-  let nextSide = 'A';
+  let nextSide = "A";
   if (currentTracks.length > 0) {
     const lastSide = currentTracks[currentTracks.length - 1].side;
     nextSide = lastSide;
   }
-  
+
   currentTracks.push({
     id: Date.now(),
     side: nextSide,
-    title: ''
+    title: "",
   });
   renderTracks();
-  
+
   // Focus new input
-  const inputs = tracksList.querySelectorAll('.track-title');
+  const inputs = tracksList.querySelectorAll(".track-title");
   if (inputs.length > 0) {
     inputs[inputs.length - 1].focus();
   }
@@ -661,37 +676,37 @@ addTrackBtn.addEventListener('click', () => {
 
 // Drag and drop for tracks
 function initDragAndDrop() {
-  const items = tracksList.querySelectorAll('.track-item');
+  const items = tracksList.querySelectorAll(".track-item");
   let draggedItem = null;
-  
-  items.forEach(item => {
-    item.addEventListener('dragstart', (e) => {
+
+  items.forEach((item) => {
+    item.addEventListener("dragstart", (e) => {
       draggedItem = item;
-      item.classList.add('dragging');
-      e.dataTransfer.effectAllowed = 'move';
+      item.classList.add("dragging");
+      e.dataTransfer.effectAllowed = "move";
     });
-    
-    item.addEventListener('dragend', () => {
-      item.classList.remove('dragging');
+
+    item.addEventListener("dragend", () => {
+      item.classList.remove("dragging");
       draggedItem = null;
-      
+
       // Update currentTracks order
       const newOrder = [];
-      tracksList.querySelectorAll('.track-item').forEach(el => {
+      tracksList.querySelectorAll(".track-item").forEach((el) => {
         const id = parseInt(el.dataset.id, 10);
-        const track = currentTracks.find(t => t.id === id);
+        const track = currentTracks.find((t) => t.id === id);
         if (track) newOrder.push(track);
       });
       currentTracks = newOrder;
     });
-    
-    item.addEventListener('dragover', (e) => {
+
+    item.addEventListener("dragover", (e) => {
       e.preventDefault();
       if (!draggedItem || draggedItem === item) return;
-      
+
       const rect = item.getBoundingClientRect();
       const midY = rect.top + rect.height / 2;
-      
+
       if (e.clientY < midY) {
         item.parentNode.insertBefore(draggedItem, item);
       } else {
@@ -708,36 +723,36 @@ function initDragAndDrop() {
 function showDeleteModal(id, name) {
   deleteTargetId = id;
   deleteRecordName.textContent = name;
-  deleteModal.classList.add('active');
+  deleteModal.classList.add("active");
 }
 
 function hideDeleteModal() {
-  deleteModal.classList.remove('active');
+  deleteModal.classList.remove("active");
   deleteTargetId = null;
 }
 
-cancelDeleteBtn.addEventListener('click', hideDeleteModal);
+cancelDeleteBtn.addEventListener("click", hideDeleteModal);
 
-deleteModal.addEventListener('click', (e) => {
+deleteModal.addEventListener("click", (e) => {
   if (e.target === deleteModal) hideDeleteModal();
 });
 
-confirmDeleteBtn.addEventListener('click', async () => {
+confirmDeleteBtn.addEventListener("click", async () => {
   if (!deleteTargetId) return;
-  
+
   confirmDeleteBtn.disabled = true;
-  confirmDeleteBtn.textContent = 'Deleting...';
-  
+  confirmDeleteBtn.textContent = "Deleting...";
+
   const result = await deleteVinyl(deleteTargetId);
-  
+
   confirmDeleteBtn.disabled = false;
-  confirmDeleteBtn.textContent = 'Delete';
-  
+  confirmDeleteBtn.textContent = "Delete";
+
   if (result.success) {
-    showToast('Record deleted', 'success');
+    showToast("Record deleted", "success");
     hideDeleteModal();
   } else {
-    showToast('Error: ' + result.error, 'error');
+    showToast("Error: " + result.error, "error");
   }
 });
 
@@ -745,13 +760,13 @@ confirmDeleteBtn.addEventListener('click', async () => {
 // IMPORT
 // ============================================
 
-validateJsonBtn.addEventListener('click', () => {
+validateJsonBtn.addEventListener("click", () => {
   try {
     const data = JSON.parse(importJson.value);
     if (!Array.isArray(data)) {
-      throw new Error('JSON must be an array of records');
+      throw new Error("JSON must be an array of records");
     }
-    
+
     // Validate each record has required fields
     const errors = [];
     data.forEach((record, i) => {
@@ -760,11 +775,11 @@ validateJsonBtn.addEventListener('click', () => {
       if (!record.year) errors.push(`Record ${i + 1}: missing year`);
       if (!record.cover) errors.push(`Record ${i + 1}: missing cover`);
     });
-    
+
     if (errors.length > 0) {
       importStatus.innerHTML = `<div class="import-error">
         <strong>Validation failed:</strong>
-        <ul>${errors.map(e => `<li>${e}</li>`).join('')}</ul>
+        <ul>${errors.map((e) => `<li>${e}</li>`).join("")}</ul>
       </div>`;
       importJsonBtn.disabled = true;
     } else {
@@ -781,34 +796,34 @@ validateJsonBtn.addEventListener('click', () => {
   }
 });
 
-importJsonBtn.addEventListener('click', async () => {
+importJsonBtn.addEventListener("click", async () => {
   try {
     const data = JSON.parse(importJson.value);
-    
-    importJsonBtn.querySelector('.btn-text').style.display = 'none';
-    importJsonBtn.querySelector('.btn-loading').style.display = 'flex';
+
+    importJsonBtn.querySelector(".btn-text").style.display = "none";
+    importJsonBtn.querySelector(".btn-loading").style.display = "flex";
     importJsonBtn.disabled = true;
-    
+
     const results = await importCollection(data);
-    const successful = results.filter(r => r.success).length;
-    const failed = results.filter(r => !r.success).length;
-    
-    importJsonBtn.querySelector('.btn-text').style.display = 'inline';
-    importJsonBtn.querySelector('.btn-loading').style.display = 'none';
-    
+    const successful = results.filter((r) => r.success).length;
+    const failed = results.filter((r) => !r.success).length;
+
+    importJsonBtn.querySelector(".btn-text").style.display = "inline";
+    importJsonBtn.querySelector(".btn-loading").style.display = "none";
+
     if (failed === 0) {
-      showToast(`Successfully imported ${successful} records!`, 'success');
-      importJson.value = '';
-      importStatus.innerHTML = '';
+      showToast(`Successfully imported ${successful} records!`, "success");
+      importJson.value = "";
+      importStatus.innerHTML = "";
       importJsonBtn.disabled = true;
-      switchView('list');
+      switchView("list");
     } else {
-      showToast(`Imported ${successful} records, ${failed} failed`, 'warning');
+      showToast(`Imported ${successful} records, ${failed} failed`, "warning");
     }
   } catch (error) {
-    showToast('Import failed: ' + error.message, 'error');
-    importJsonBtn.querySelector('.btn-text').style.display = 'inline';
-    importJsonBtn.querySelector('.btn-loading').style.display = 'none';
+    showToast("Import failed: " + error.message, "error");
+    importJsonBtn.querySelector(".btn-text").style.display = "inline";
+    importJsonBtn.querySelector(".btn-loading").style.display = "none";
   }
 });
 
@@ -816,32 +831,32 @@ importJsonBtn.addEventListener('click', async () => {
 // TOAST NOTIFICATIONS
 // ============================================
 
-function showToast(message, type = 'info') {
-  const toast = document.createElement('div');
+function showToast(message, type = "info") {
+  const toast = document.createElement("div");
   toast.className = `toast toast-${type}`;
   toast.innerHTML = `
     <span>${message}</span>
     <button class="toast-close">×</button>
   `;
-  
+
   toastContainer.appendChild(toast);
-  
+
   // Animate in
   requestAnimationFrame(() => {
-    toast.classList.add('show');
+    toast.classList.add("show");
   });
-  
+
   // Auto remove
   const timeout = setTimeout(() => removeToast(toast), 5000);
-  
-  toast.querySelector('.toast-close').addEventListener('click', () => {
+
+  toast.querySelector(".toast-close").addEventListener("click", () => {
     clearTimeout(timeout);
     removeToast(toast);
   });
 }
 
 function removeToast(toast) {
-  toast.classList.remove('show');
+  toast.classList.remove("show");
   setTimeout(() => toast.remove(), 300);
 }
 
@@ -856,28 +871,28 @@ function removeToast(toast) {
  * @returns {Promise<Array>} - Array of matching releases
  */
 async function searchDiscogs(artist, album) {
-  if (DISCOGS_TOKEN === 'YOUR_DISCOGS_TOKEN') {
-    throw new Error('Please set your Discogs API token in admin.js');
+  if (DISCOGS_TOKEN === "wPwYGEaxQcVEhSoWxBKDUlzQVOHCWZKHvxpwPlwJ") {
+    throw new Error("Please set your Discogs API token in admin.js");
   }
-  
+
   const query = encodeURIComponent(`${artist} ${album}`);
   const url = `https://api.discogs.com/database/search?q=${query}&type=release&per_page=10`;
-  
+
   const response = await fetch(url, {
     headers: {
-      'Authorization': `Discogs token=${DISCOGS_TOKEN}`,
-      'User-Agent': 'VinylCollectionApp/1.0'
-    }
+      Authorization: `Discogs token=${DISCOGS_TOKEN}`,
+      "User-Agent": "VinylCollectionApp/1.0",
+    },
   });
-  
+
   if (response.status === 429) {
-    throw new Error('Rate limit exceeded. Please wait a moment and try again.');
+    throw new Error("Rate limit exceeded. Please wait a moment and try again.");
   }
-  
+
   if (!response.ok) {
     throw new Error(`Discogs API error: ${response.status}`);
   }
-  
+
   const data = await response.json();
   return data.results || [];
 }
@@ -889,46 +904,46 @@ async function searchDiscogs(artist, album) {
  */
 async function fetchReleaseDetails(releaseId) {
   const url = `https://api.discogs.com/releases/${releaseId}`;
-  
+
   const response = await fetch(url, {
     headers: {
-      'Authorization': `Discogs token=${DISCOGS_TOKEN}`,
-      'User-Agent': 'VinylCollectionApp/1.0'
-    }
+      Authorization: `Discogs token=${DISCOGS_TOKEN}`,
+      "User-Agent": "VinylCollectionApp/1.0",
+    },
   });
-  
+
   if (!response.ok) {
     throw new Error(`Failed to fetch release details: ${response.status}`);
   }
-  
+
   return await response.json();
 }
 
 /**
  * Handle Discogs fetch button click
  */
-discogsFetchBtn.addEventListener('click', async () => {
+discogsFetchBtn.addEventListener("click", async () => {
   const artist = artistInput.value.trim();
   const album = albumInput.value.trim();
-  
+
   if (!artist || !album) {
-    showToast('Please enter both artist and album title first', 'error');
+    showToast("Please enter both artist and album title first", "error");
     return;
   }
-  
+
   // Show loading state
   discogsFetchBtn.disabled = true;
-  discogsFetchBtn.querySelector('.btn-text').style.display = 'none';
-  discogsFetchBtn.querySelector('.btn-loading').style.display = 'flex';
-  
+  discogsFetchBtn.querySelector(".btn-text").style.display = "none";
+  discogsFetchBtn.querySelector(".btn-loading").style.display = "flex";
+
   try {
     const results = await searchDiscogs(artist, album);
-    
+
     if (results.length === 0) {
-      showToast('No results found on Discogs', 'error');
+      showToast("No results found on Discogs", "error");
       return;
     }
-    
+
     if (results.length === 1) {
       // Only one result, auto-fill directly
       await applyDiscogsResult(results[0]);
@@ -937,13 +952,13 @@ discogsFetchBtn.addEventListener('click', async () => {
       showDiscogsResultsModal(results);
     }
   } catch (error) {
-    console.error('Discogs fetch error:', error);
-    showToast(error.message || 'Failed to fetch from Discogs', 'error');
+    console.error("Discogs fetch error:", error);
+    showToast(error.message || "Failed to fetch from Discogs", "error");
   } finally {
     // Reset button state
     discogsFetchBtn.disabled = false;
-    discogsFetchBtn.querySelector('.btn-text').style.display = 'flex';
-    discogsFetchBtn.querySelector('.btn-loading').style.display = 'none';
+    discogsFetchBtn.querySelector(".btn-text").style.display = "flex";
+    discogsFetchBtn.querySelector(".btn-loading").style.display = "none";
   }
 });
 
@@ -952,50 +967,54 @@ discogsFetchBtn.addEventListener('click', async () => {
  * @param {Array} results - Array of Discogs search results
  */
 function showDiscogsResultsModal(results) {
-  discogsResults.innerHTML = results.map(result => `
+  discogsResults.innerHTML = results
+    .map(
+      (result) => `
     <div class="discogs-result-item" data-id="${result.id}">
       <div class="discogs-result-cover">
-        <img src="${result.cover_image || result.thumb || ''}" 
+        <img src="${result.cover_image || result.thumb || ""}" 
              alt="${result.title}" 
              onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect fill=%22%23333%22 width=%22100%22 height=%22100%22/><text x=%2250%22 y=%2255%22 text-anchor=%22middle%22 fill=%22%23666%22 font-size=%2240%22>♫</text></svg>'">
       </div>
       <div class="discogs-result-info">
         <div class="discogs-result-title">${result.title}</div>
-        <div class="discogs-result-artist">${result.title.split(' - ')[0] || 'Unknown Artist'}</div>
+        <div class="discogs-result-artist">${result.title.split(" - ")[0] || "Unknown Artist"}</div>
         <div class="discogs-result-meta">
-          ${result.year ? `<span>📅 ${result.year}</span>` : ''}
-          ${result.genre ? `<span>🎵 ${result.genre[0]}</span>` : ''}
-          ${result.label ? `<span>🏷️ ${result.label[0]}</span>` : ''}
+          ${result.year ? `<span>📅 ${result.year}</span>` : ""}
+          ${result.genre ? `<span>🎵 ${result.genre[0]}</span>` : ""}
+          ${result.label ? `<span>🏷️ ${result.label[0]}</span>` : ""}
         </div>
       </div>
     </div>
-  `).join('');
-  
+  `,
+    )
+    .join("");
+
   // Add click handlers for result items
-  discogsResults.querySelectorAll('.discogs-result-item').forEach(item => {
-    item.addEventListener('click', async () => {
+  discogsResults.querySelectorAll(".discogs-result-item").forEach((item) => {
+    item.addEventListener("click", async () => {
       const resultId = item.dataset.id;
-      const result = results.find(r => r.id.toString() === resultId);
+      const result = results.find((r) => r.id.toString() === resultId);
       if (result) {
         hideDiscogsModal();
         await applyDiscogsResult(result);
       }
     });
   });
-  
-  discogsModal.classList.add('active');
+
+  discogsModal.classList.add("active");
 }
 
 /**
  * Hide the Discogs results modal
  */
 function hideDiscogsModal() {
-  discogsModal.classList.remove('active');
+  discogsModal.classList.remove("active");
 }
 
-cancelDiscogsBtn.addEventListener('click', hideDiscogsModal);
+cancelDiscogsBtn.addEventListener("click", hideDiscogsModal);
 
-discogsModal.addEventListener('click', (e) => {
+discogsModal.addEventListener("click", (e) => {
   if (e.target === discogsModal) {
     hideDiscogsModal();
   }
@@ -1009,61 +1028,60 @@ async function applyDiscogsResult(result) {
   try {
     // Fetch detailed release info for tracklist
     const details = await fetchReleaseDetails(result.id);
-    
+
     // Fill in year
     if (details.year || result.year) {
       yearInput.value = details.year || result.year;
     }
-    
+
     // Fill in genre
     if (details.genres && details.genres.length > 0) {
       genreInput.value = details.genres[0];
     } else if (result.genre && result.genre.length > 0) {
       genreInput.value = result.genre[0];
     }
-    
+
     // Fill in label
     if (details.labels && details.labels.length > 0) {
       labelInput.value = details.labels[0].name;
     } else if (result.label && result.label.length > 0) {
       labelInput.value = result.label[0];
     }
-    
+
     // Fill in cover art
     if (details.images && details.images.length > 0) {
       const coverUrl = details.images[0].uri || details.images[0].resource_url;
       if (coverUrl) {
         coverInput.value = coverUrl;
         coverPreviewImg.src = coverUrl;
-        coverPreview.style.display = 'block';
+        coverPreview.style.display = "block";
       }
     } else if (result.cover_image) {
       coverInput.value = result.cover_image;
       coverPreviewImg.src = result.cover_image;
-      coverPreview.style.display = 'block';
+      coverPreview.style.display = "block";
     }
-    
+
     // Fill in tracklist
     if (details.tracklist && details.tracklist.length > 0) {
       currentTracks = details.tracklist
-        .filter(track => track.type_ === 'track')
-        .map(track => ({
+        .filter((track) => track.type_ === "track")
+        .map((track) => ({
           title: track.title,
-          duration: track.duration || ''
+          duration: track.duration || "",
         }));
       renderTracks();
     }
-    
+
     // Fill in Discogs link
     if (details.uri) {
       discogsInput.value = details.uri;
     }
-    
-    showToast('Album details filled from Discogs!', 'success');
-    
+
+    showToast("Album details filled from Discogs!", "success");
   } catch (error) {
-    console.error('Error applying Discogs result:', error);
-    
+    console.error("Error applying Discogs result:", error);
+
     // Fall back to basic info from search result
     if (result.year) yearInput.value = result.year;
     if (result.genre && result.genre[0]) genreInput.value = result.genre[0];
@@ -1071,10 +1089,10 @@ async function applyDiscogsResult(result) {
     if (result.cover_image) {
       coverInput.value = result.cover_image;
       coverPreviewImg.src = result.cover_image;
-      coverPreview.style.display = 'block';
+      coverPreview.style.display = "block";
     }
-    
-    showToast('Filled basic info (detailed fetch failed)', 'info');
+
+    showToast("Filled basic info (detailed fetch failed)", "info");
   }
 }
 
@@ -1082,21 +1100,21 @@ async function applyDiscogsResult(result) {
 // KEYBOARD SHORTCUTS
 // ============================================
 
-document.addEventListener('keydown', (e) => {
+document.addEventListener("keydown", (e) => {
   // Escape to close modals/forms
-  if (e.key === 'Escape') {
-    if (discogsModal.classList.contains('active')) {
+  if (e.key === "Escape") {
+    if (discogsModal.classList.contains("active")) {
       hideDiscogsModal();
-    } else if (deleteModal.classList.contains('active')) {
+    } else if (deleteModal.classList.contains("active")) {
       hideDeleteModal();
-    } else if (formView.style.display !== 'none') {
-      switchView('list');
+    } else if (formView.style.display !== "none") {
+      switchView("list");
     }
   }
-  
+
   // Ctrl/Cmd + N for new record
-  if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
+  if ((e.ctrlKey || e.metaKey) && e.key === "n") {
     e.preventDefault();
-    switchView('add');
+    switchView("add");
   }
 });
