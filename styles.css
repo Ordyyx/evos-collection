@@ -699,6 +699,7 @@ body::before {
     opacity 0.4s var(--ease-out),
     visibility 0.4s;
   cursor: pointer;
+  padding: 40px;
 }
 
 .now-playing-overlay.active {
@@ -707,14 +708,12 @@ body::before {
 }
 
 .now-playing {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 24px;
-  padding: 40px;
-  max-width: 90vw;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+  gap: 32px;
+  max-width: 1200px;
   max-height: 90vh;
-  overflow-y: auto;
   transform: scale(0.95) translateY(20px);
   transition: transform 0.5s var(--ease-spring);
 }
@@ -723,14 +722,18 @@ body::before {
   transform: scale(1) translateY(0);
 }
 
+/* Album art - always prominently displayed */
 .now-playing-cover {
-  width: min(70vh, 70vw);
+  grid-row: 1 / 3;
+  width: min(55vh, 50vw, 500px);
+  min-width: 280px;
   aspect-ratio: 1;
   border-radius: 6px;
   overflow: hidden;
   box-shadow:
     0 20px 60px rgba(0, 0, 0, 0.6),
     0 40px 100px rgba(0, 0, 0, 0.4);
+  flex-shrink: 0;
 }
 
 .now-playing-cover img {
@@ -739,30 +742,74 @@ body::before {
   object-fit: cover;
 }
 
+/* Details section - beside the cover */
 .now-playing-details {
-  text-align: center;
+  text-align: left;
+  align-self: end;
+  padding-bottom: 8px;
 }
 
 .now-playing-title {
   font-family: "Syne", system-ui, sans-serif;
-  font-size: clamp(24px, 4vw, 42px);
+  font-size: clamp(24px, 3vw, 38px);
   margin-bottom: 8px;
   font-weight: 700;
+  line-height: 1.1;
 }
 
 .now-playing-artist {
-  font-size: clamp(14px, 2vw, 18px);
+  font-size: clamp(14px, 1.5vw, 18px);
   color: var(--text-muted);
+}
+
+/* Tracklist - beside the cover, below details */
+.now-playing-tracklist {
+  align-self: start;
+  max-height: 300px;
+  overflow-y: auto;
 }
 
 /* Escape hint */
 .escape-hint {
   position: absolute;
   bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
   font-size: 12px;
   color: var(--text-dim);
   letter-spacing: 0.1em;
   text-transform: uppercase;
+}
+
+/* Mobile: stack vertically but keep cover large */
+@media (max-width: 900px) {
+  .now-playing {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    justify-items: center;
+    max-height: none;
+    overflow-y: auto;
+    padding: 20px;
+    padding-bottom: 60px;
+  }
+  
+  .now-playing-cover {
+    grid-row: auto;
+    width: min(80vw, 80vh, 400px);
+    min-width: 200px;
+  }
+  
+  .now-playing-details {
+    text-align: center;
+    align-self: auto;
+    padding-bottom: 0;
+  }
+  
+  .now-playing-tracklist {
+    max-height: none;
+    width: 100%;
+    max-width: 500px;
+  }
 }
 
 /* ============================================
@@ -973,7 +1020,6 @@ body::before {
   gap: 12px;
   margin-top: 20px;
   flex-wrap: wrap;
-  justify-content: center;
 }
 
 .link-button {
@@ -1015,35 +1061,29 @@ body::before {
   transform: translateY(-2px);
 }
 
-/* Tracklist */
-.now-playing-tracklist {
-  width: 100%;
-  max-width: 600px;
-  margin-top: 16px;
-}
-
+/* Tracklist - updated for side layout */
 .tracklist-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
 }
 
 .tracklist-side {
   background: var(--surface);
   border-radius: 8px;
-  padding: 20px;
+  padding: 16px;
   border: 1px solid var(--border);
 }
 
 .side-label {
   font-family: "Syne", system-ui, sans-serif;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   color: var(--accent);
   text-transform: uppercase;
   letter-spacing: 0.15em;
-  margin-bottom: 12px;
-  padding-bottom: 8px;
+  margin-bottom: 10px;
+  padding-bottom: 6px;
   border-bottom: 1px solid var(--border);
 }
 
@@ -1075,20 +1115,12 @@ body::before {
   min-width: 16px;
 }
 
-/* Mobile adjustments for now playing */
+/* Additional mobile adjustments for now playing */
 @media (max-width: 600px) {
-  .now-playing {
-    padding: 24px 16px;
-    gap: 16px;
-  }
-
-  .now-playing-cover {
-    width: 85vw;
-  }
-
   .now-playing-links {
     flex-direction: column;
     width: 100%;
+    justify-content: center;
   }
 
   .link-button {
