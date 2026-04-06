@@ -113,7 +113,7 @@ let deleteTargetId = null;
 
 // Discogs API Configuration
 // Replace with your personal Discogs token from https://www.discogs.com/settings/developers
-const DISCOGS_TOKEN = "YOUR_DISCOGS_TOKEN";
+const DISCOGS_TOKEN = "wPwYGEaxQcVEhSoWxBKDUlzQVOHCWZKHvxpwPlwJ";
 
 // ============================================
 // AUTH HANDLERS
@@ -871,7 +871,7 @@ function removeToast(toast) {
  * @returns {Promise<Array>} - Array of matching releases
  */
 async function searchDiscogs(artist, album) {
-  if (DISCOGS_TOKEN === "wPwYGEaxQcVEhSoWxBKDUlzQVOHCWZKHvxpwPlwJ") {
+  if (DISCOGS_TOKEN === "YOUR_DISCOGS_TOKEN") {
     throw new Error("Please set your Discogs API token in admin.js");
   }
 
