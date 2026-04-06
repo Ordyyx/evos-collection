@@ -1,0 +1,32 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Vinyl collection rules
+    match /vinyls/{vinylId} {
+      // Anyone can read the vinyl collection (public site)
+      allow read: if true;
+      
+      // Only authenticated users can create, update, or delete
+      allow write: if request.auth != null;
+      
+      // ============================================
+      // OPTIONAL: Restrict to specific email(s)
+      // ============================================
+      // Uncomment the line below and replace with your email
+      // to restrict admin access to only your account:
+      //
+      // allow write: if request.auth != null 
+      //   && request.auth.token.email == 'your@email.com';
+      //
+      // For multiple admins, use 'in' operator:
+      // allow write: if request.auth != null 
+      //   && request.auth.token.email in ['admin1@email.com', 'admin2@email.com'];
+    }
+    
+    // Deny access to all other collections by default
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

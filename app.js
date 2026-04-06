@@ -1,45 +1,18 @@
 /**
  * WAX — Vinyl Collection Display
+ * Firebase-Powered Edition
  * 
- * Edit collection.json to add your records.
- * 
- * Each album needs:
- *   artist  - Artist name
- *   album   - Album title
- *   year    - Release year
- *   cover   - Cover art URL (use Spotify/Apple Music for best quality)
- *   genre   - (optional) Music genre (e.g., "Pop", "R&B", "Alternative")
- *   rating  - (optional) Your rating 1-5 (0 = unrated)
- *   tracks  - (optional) Array of track objects with side and title:
- *       [
- *         { "side": "A", "title": "Track Name" },
- *         { "side": "B", "title": "Another Track" }
- *       ]
- *   links   - (optional) External links:
- *       appleMusic - Apple Music album URL
- *       discogs    - Discogs release URL
- *   vinyl   - (optional) Vinyl appearance:
- *       color      - Hex color code (e.g., "#e74c3c" for red)
- *       color2     - Second color for marble/splatter styles
- *       style      - One of: "classic", "translucent", "marble", "splatter", "picture"
- *       labelColor - Hex color for the center label (default: "#1a1a1a")
- *       labelText  - Custom text for label, or "auto" to use album name (default: "auto")
- * 
- * VINYL STYLES:
- *   classic     - Standard vinyl (default)
- *   translucent - See-through colored vinyl
- *   marble      - Swirled two-color effect
- *   splatter    - Random splatter pattern
- *   picture     - Picture disc (uses album cover)
- * 
- * To find high-quality cover art:
- * 1. Search the album on open.spotify.com or music.apple.com
- * 2. Right-click the cover → "Copy image address"
+ * This version reads from Firestore in real-time.
+ * Use the admin dashboard to manage your collection.
  */
 
-(async function() {
+import { subscribeToVinyls, onAuthChange } from './js/firebase-config.js';
+
+(function() {
   const grid = document.getElementById('grid');
   const countEl = document.getElementById('count');
+  const loadingOverlay = document.getElementById('loadingOverlay');
+  const adminLink = document.getElementById('adminLink');
   const nowPlayingOverlay = document.getElementById('nowPlaying');
   const npCover = document.getElementById('npCover');
   const npTitle = document.getElementById('npTitle');
@@ -51,38 +24,17 @@
   const npLinks = document.getElementById('npLinks');
   const npTracklist = document.getElementById('npTracklist');
 
-  // Load collection
   let collection = [];
-  
-  try {
-    const response = await fetch('collection.json');
-    collection = await response.json();
-  } catch (err) {
-    console.error('Could not load collection.json:', err);
-    grid.innerHTML = `
-      <div class="empty-state">
-        <h2>No records yet</h2>
-        <p>Add your vinyl collection by editing the collection.json file in VS Code.</p>
-        <code>collection.json</code>
-      </div>
-    `;
-    return;
-  }
+  let unsubscribe = null;
 
-  // Update count
-  countEl.textContent = collection.length;
-
-  // Empty state
-  if (collection.length === 0) {
-    grid.innerHTML = `
-      <div class="empty-state">
-        <h2>Your shelf is empty</h2>
-        <p>Add your first record by editing collection.json</p>
-        <code>collection.json</code>
-      </div>
-    `;
-    return;
-  }
+  // Show/hide admin link based on auth
+  onAuthChange((user) => {
+    if (user) {
+      adminLink.style.display = 'flex';
+    } else {
+      adminLink.style.display = 'none';
+    }
+  });
 
   // Generate vinyl disc HTML based on style
   function createVinylDisc(record) {
@@ -123,6 +75,7 @@
   }
   
   function isLightColor(hex) {
+    if (!hex) return false;
     const c = hex.replace('#', '');
     const r = parseInt(c.substr(0, 2), 16);
     const g = parseInt(c.substr(2, 2), 16);
@@ -175,7 +128,7 @@
     
     // Group tracks by side
     const sides = {};
-    tracks.forEach((track, index) => {
+    tracks.forEach((track) => {
       const side = track.side || 'A';
       if (!sides[side]) {
         sides[side] = [];
@@ -202,34 +155,58 @@
   }
 
   // Render albums
-  collection.forEach((record, index) => {
-    const album = document.createElement('article');
-    album.className = 'album';
+  function renderCollection(vinyls) {
+    collection = vinyls;
+    countEl.textContent = collection.length;
     
-    // Add rating badge if rated
-    const ratingBadge = record.rating && record.rating > 0 
-      ? `<span class="album-rating">${'★'.repeat(record.rating)}</span>` 
-      : '';
-    
-    album.innerHTML = `
-      <div class="album-inner">
-        ${createVinylDisc(record)}
-        <div class="album-cover">
-          <img src="${record.cover}" alt="${record.album} by ${record.artist}" loading="lazy">
+    // Hide loading
+    loadingOverlay.classList.add('hidden');
+
+    // Empty state
+    if (collection.length === 0) {
+      grid.innerHTML = `
+        <div class="empty-state">
+          <h2>Your shelf is empty</h2>
+          <p>Add your first record using the admin dashboard</p>
+          <a href="admin.html" class="empty-state-link">Open Admin Dashboard</a>
         </div>
-        <span class="album-year">${record.year}</span>
-        ${ratingBadge}
-        <div class="album-info">
-          <h2 class="album-title">${record.album}</h2>
-          <p class="album-artist">${record.artist}</p>
+      `;
+      return;
+    }
+
+    // Clear and re-render
+    grid.innerHTML = '';
+    
+    collection.forEach((record, index) => {
+      const album = document.createElement('article');
+      album.className = 'album';
+      album.style.animationDelay = `${Math.min(index * 0.05, 0.6)}s`;
+      
+      // Add rating badge if rated
+      const ratingBadge = record.rating && record.rating > 0 
+        ? `<span class="album-rating">${'★'.repeat(record.rating)}</span>` 
+        : '';
+      
+      album.innerHTML = `
+        <div class="album-inner">
+          ${createVinylDisc(record)}
+          <div class="album-cover">
+            <img src="${record.cover}" alt="${record.album} by ${record.artist}" loading="lazy">
+          </div>
+          <span class="album-year">${record.year}</span>
+          ${ratingBadge}
+          <div class="album-info">
+            <h2 class="album-title">${record.album}</h2>
+            <p class="album-artist">${record.artist}</p>
+          </div>
         </div>
-      </div>
-    `;
-    
-    album.addEventListener('click', () => openNowPlaying(record));
-    
-    grid.appendChild(album);
-  });
+      `;
+      
+      album.addEventListener('click', () => openNowPlaying(record));
+      
+      grid.appendChild(album);
+    });
+  }
 
   // Now Playing functions
   function openNowPlaying(record) {
@@ -295,6 +272,27 @@
       const prevIndex = (currentIndex - 1 + collection.length) % collection.length;
       openNowPlaying(collection[prevIndex]);
     }
+  });
+
+  // Subscribe to Firestore updates
+  try {
+    unsubscribe = subscribeToVinyls((vinyls) => {
+      renderCollection(vinyls);
+    });
+  } catch (error) {
+    console.error('Error connecting to Firestore:', error);
+    loadingOverlay.innerHTML = `
+      <div class="loading-spinner error">
+        <p>Error loading collection</p>
+        <p class="error-message">${error.message}</p>
+        <button onclick="location.reload()">Retry</button>
+      </div>
+    `;
+  }
+
+  // Cleanup on page unload
+  window.addEventListener('beforeunload', () => {
+    if (unsubscribe) unsubscribe();
   });
 
 })();
